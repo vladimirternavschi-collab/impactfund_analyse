@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Impact Fund — Evaluare independentă a aplicanților</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ THEMES ============ */
+:root{
+  --biz:#0e9e6e; --biz-2:#0a7d55; --soc:#7145ff; --soc-2:#5a2ff0;
+  --q1:#0e9e6e; --q2:#2b7fff; --q3:#8a5cff; --q4:#7e8aa0;
+  --warn:#e5484d; --amber:#a85f14; --teal:#0f9c93;
+  --fh:'Space Grotesk','Segoe UI',system-ui,'Helvetica Neue',Arial,sans-serif;
+  --fb:'Inter','Segoe UI',system-ui,'Helvetica Neue',Arial,sans-serif;
+}
+/* LIGHT (implicit) — porcelain cald cu sclipiri mentă/lavandă */
+html[data-theme="dark"]{
+  --biz:#2fe6a8; --biz-2:#12b98a; --soc:#ab86ff; --soc-2:#8a63ff;
+  --q1:#3ff0ad; --q2:#45b6ff; --q3:#cbb0ff; --q4:#a7b6d2;
+  --warn:#ff7b7b; --amber:#ffbe63; --teal:#3fe0d4;
+  --bg:#0c0726;
+  --panel:rgba(255,255,255,.075); --panel-2:rgba(255,255,255,.05);
+  --stroke:rgba(255,255,255,.16); --stroke-2:rgba(255,255,255,.26);
+  --txt:#f2f4fd; --txt-dim:#c4cde8; --txt-mut:#9aa3c9;
+  --nav-a:rgba(13,7,40,.86); --nav-b:rgba(13,7,40,.5);
+  --track:rgba(255,255,255,.12);
+  --grid-line:rgba(255,255,255,.18); --axis-line:rgba(255,255,255,.4); --tick:#b3bcdc;
+  --target-zone:rgba(63,240,173,.12);
+  --shadow:0 26px 64px rgba(4,2,18,.6);
+  --modal-a:#181043; --modal-b:#0f0930;
+  --plot-bg:rgba(6,4,22,.55);
+}
+html[data-theme="dark"] body{
+  background:
+    radial-gradient(1150px 700px at 88% -14%, rgba(64,128,255,.42), transparent 55%),
+    radial-gradient(1000px 720px at 0% -2%, rgba(126,64,255,.30), transparent 58%),
+    radial-gradient(900px 520px at 60% 42%, rgba(40,120,255,.10), transparent 60%),
+    linear-gradient(170deg,#16244e 0%,#141741 38%,#110c33 70%,#0c0726 100%);
+  background-attachment: fixed;
+}
+html[data-theme="dark"] .hero p.lead{color:#e9edff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--fb);color:var(--txt);line-height:1.55;-webkit-font-smoothing:antialiased;letter-spacing:.1px;transition:background .4s,color .3s;min-height:100vh}
+a{color:inherit}
+h1,h2,h3,h4{font-family:var(--fh);font-weight:600;line-height:1.15;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.grad{background:linear-gradient(100deg,var(--biz),var(--soc) 85%);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);background:linear-gradient(180deg,var(--nav-a),var(--nav-b));border-bottom:1px solid var(--stroke)}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--fh);font-weight:600;font-size:15px}
+.brand .dot{width:22px;height:22px;border-radius:7px;background:conic-gradient(from 200deg,var(--biz),var(--soc),var(--q2),var(--biz));box-shadow:0 0 18px rgba(14,158,110,.45)}
+.nav nav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.nav nav a{padding:7px 11px;border-radius:9px;font-size:13.5px;color:var(--txt-dim);text-decoration:none;transition:.18s}
+.nav nav a:hover{color:var(--txt);background:var(--panel)}
+.iconbtn{width:38px;height:38px;border-radius:10px;border:1px solid var(--stroke);background:var(--panel);color:var(--txt-dim);cursor:pointer;display:grid;place-items:center;transition:.18s;margin-left:4px}
+.iconbtn:hover{color:var(--txt);border-color:var(--stroke-2)}
+@media(max-width:720px){.nav nav a{display:none}}
+
+/* HERO */
+.hero{padding:60px 0 26px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:2.4px;text-transform:uppercase;color:var(--biz);border:1px solid var(--biz);padding:6px 13px;border-radius:999px;background:color-mix(in srgb,var(--biz) 8%,transparent)}
+.hero h1{font-size:clamp(30px,5vw,52px);font-weight:700;margin:20px 0 14px;letter-spacing:-.5px}
+.hero p.lead{max-width:820px;color:var(--txt-dim);font-size:clamp(15px,1.6vw,18px)}
+.stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
+.stat{flex:1;min-width:150px;background:var(--panel);border:1px solid var(--stroke);border-radius:16px;padding:18px;position:relative;overflow:hidden;backdrop-filter:blur(8px)}
+.stat::after{content:"";position:absolute;inset:0;background:radial-gradient(140px 90px at 90% -20%,color-mix(in srgb,var(--biz) 14%,transparent),transparent);pointer-events:none}
+.stat b{font-family:var(--fh);font-size:30px;font-weight:700;display:block;line-height:1}
+.stat span{color:var(--txt-mut);font-size:12.5px;letter-spacing:.3px}
+.disclaimer{margin-top:22px;display:flex;gap:12px;align-items:flex-start;background:color-mix(in srgb,var(--warn) 8%,transparent);border:1px solid color-mix(in srgb,var(--warn) 32%,transparent);border-radius:14px;padding:14px 16px;color:var(--txt-dim);font-size:13.5px}
+.disclaimer svg{flex:none;margin-top:2px;color:var(--warn)}
+
+/* SECTIONS */
+section{padding:44px 0}
+.sec-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.sec-head .ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--panel);border:1px solid var(--stroke-2);color:var(--biz)}
+.sec-head h2{font-size:clamp(22px,3vw,30px);font-weight:600}
+.sec-sub{color:var(--txt-dim);font-size:14.5px;max-width:840px;margin:0 0 24px 50px}
+@media(max-width:640px){.sec-sub{margin-left:0}}
+
+/* METODOLOGIE */
+.axes{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:820px){.axes{grid-template-columns:1fr}}
+.axis-card{background:var(--panel);border:1px solid var(--stroke);border-radius:18px;padding:22px;backdrop-filter:blur(8px)}
+.axis-card .tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--fh);font-weight:600;font-size:15px;margin-bottom:12px}
+.axis-card.biz .tag{color:var(--biz)} .axis-card.soc .tag{color:var(--soc)}
+.axis-card .bar{height:4px;border-radius:4px;margin-bottom:16px}
+.axis-card.biz .bar{background:linear-gradient(90deg,var(--biz),var(--biz-2))}
+.axis-card.soc .bar{background:linear-gradient(90deg,var(--soc),var(--soc-2))}
+.axis-card p{color:var(--txt-dim);font-size:13.6px;margin:0 0 14px}
+.clr-note{font-size:11.5px;color:var(--txt-mut);margin-top:12px;line-height:1.55}
+.clr-note b{font-weight:600}
+.crit{display:flex;flex-wrap:wrap;gap:7px}
+.crit .c{font-size:12px;padding:5px 10px;border-radius:8px;background:var(--panel-2);border:1px solid var(--stroke);color:var(--txt-dim)}
+.crit .c b{color:var(--txt);font-family:var(--fh)}
+.spectrum{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap}
+.spectrum .s{flex:1;min-width:120px;text-align:center;font-size:11.5px;padding:8px 6px;border-radius:9px;font-weight:600}
+.quads{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+@media(max-width:720px){.quads{grid-template-columns:1fr}}
+.quad{border-radius:16px;padding:18px;border:1px solid var(--stroke);background:var(--panel);backdrop-filter:blur(8px)}
+.quad h4{font-size:15px;margin-bottom:6px;display:flex;align-items:center;gap:9px}
+.quad .rn{font-family:var(--fh);font-weight:700;font-size:13px;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none}
+.quad p{color:var(--txt-dim);font-size:13px;margin:0}
+.quad.q1{border-color:color-mix(in srgb,var(--q1) 40%,transparent)}
+.quad.q1 .rn{background:color-mix(in srgb,var(--q1) 16%,transparent);color:var(--q1)}
+.quad.q2 .rn{background:color-mix(in srgb,var(--q2) 16%,transparent);color:var(--q2)}
+.quad.q3 .rn{background:color-mix(in srgb,var(--q3) 16%,transparent);color:var(--q3)}
+.quad.q4 .rn{background:color-mix(in srgb,var(--q4) 16%,transparent);color:var(--q4)}
+
+/* CONCLUZII */
+.insights{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.insight{background:var(--panel);border:1px solid var(--stroke);border-radius:16px;padding:18px;transition:.2s;backdrop-filter:blur(8px)}
+.insight:hover{border-color:var(--stroke-2);transform:translateY(-2px);box-shadow:var(--shadow)}
+.insight .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;margin-bottom:11px;background:var(--panel-2);font-size:17px}
+.insight h4{font-size:14.5px;margin-bottom:6px}
+.insight p{font-size:12.8px;color:var(--txt-dim);margin:0}
+
+/* SIGNAL TO PARTNER */
+.signal-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:820px){.signal-grid{grid-template-columns:1fr}}
+.signal-col{background:var(--panel);border:1px solid var(--stroke);border-radius:18px;padding:20px;backdrop-filter:blur(8px)}
+.signal-col h3{font-size:15px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.signal-col.contam h3{color:var(--warn)} .signal-col.integ h3{color:var(--amber)}
+.sig-item{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--stroke);font-size:13.2px;cursor:pointer;transition:.15s}
+.sig-item:last-child{border-bottom:none}
+.sig-item:hover{padding-left:5px}
+.sig-item .nm{font-family:var(--fh);font-weight:600;color:var(--txt);font-size:13px}
+.sig-item .tx{color:var(--txt-dim);margin-top:2px}
+.sig-item .dot{flex:none;width:8px;height:8px;border-radius:50%;margin-top:5px}
+.fav-lbl{font-family:var(--fh);font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--txt-mut);margin:20px 0 12px;display:flex;align-items:center;gap:12px}
+.fav-lbl .ln{flex:1;height:1px;background:var(--stroke)}
+.fav-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.favcard{background:var(--panel);border:0.5px solid var(--stroke);border-radius:16px;padding:16px 18px;cursor:pointer;transition:.2s;backdrop-filter:blur(8px)}
+.favcard:hover{transform:translateY(-3px);border-color:var(--stroke-2);box-shadow:var(--shadow)}
+.favcard.t1{border:1.5px solid color-mix(in srgb,var(--q1) 55%,transparent);background:color-mix(in srgb,var(--q1) 7%,transparent)}
+.favcard .fh{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.favcard h4{font-size:15.5px;font-weight:600;letter-spacing:-.2px}
+.favcard .fmeta{font-size:11px;color:var(--txt-mut);margin-top:3px}
+.favbadge{font-size:10px;font-weight:600;font-family:var(--fh);padding:3px 8px;border-radius:7px;white-space:nowrap}
+.favsc{display:flex;gap:14px;flex-wrap:wrap;margin:11px 0 9px;font-size:12px}
+.favsc b{font-family:var(--fh);font-size:13px}
+.favcard .why{font-size:13px;color:var(--txt-dim);line-height:1.5}
+.favcard .cond{font-size:12px;color:var(--amber);margin-top:9px;display:flex;gap:7px;align-items:flex-start}
+.favcard .cond .ic{flex:none;margin-top:1px}
+.exwrap{margin-top:26px;background:var(--panel-2);border:0.5px solid var(--stroke);border-radius:16px;padding:18px 20px;backdrop-filter:blur(8px)}
+.exwrap h3{font-size:14px;margin-bottom:6px;display:flex;gap:9px;align-items:center;color:var(--txt)}
+.exgroup{padding:12px 0;border-bottom:0.5px solid var(--stroke);font-size:13px}
+.exgroup:last-child{border:none;padding-bottom:0}
+.exgroup .et{font-family:var(--fh);font-weight:600;color:var(--txt)}
+.exgroup .en{color:var(--txt-dim);margin-top:3px;line-height:1.5}
+.fbtn[data-f="favorite"].on{background:linear-gradient(100deg,#3fd39a,var(--q1))}
+
+/* MATRICE */
+.matrix-shell{background:var(--panel);border:1px solid var(--stroke);border-radius:20px;padding:16px 10px 6px;backdrop-filter:blur(8px)}
+.matrix-legend{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:6px 0 2px;padding:12px;font-size:12.5px;color:var(--txt-dim)}
+.matrix-legend .lg{display:inline-flex;align-items:center;gap:7px}
+.matrix-legend .sw{width:12px;height:12px;border-radius:50%}
+.matrix-legend .shp{width:14px;height:14px;display:inline-block}
+#matrix{width:100%;height:auto;display:block;touch-action:manipulation}
+#matrix circle.pt{cursor:pointer;transition:r .15s,opacity .15s,filter .15s}
+#matrix circle.pt:hover{filter:drop-shadow(0 0 8px currentColor)}
+.mtip{position:fixed;z-index:60;pointer-events:none;background:var(--modal-a);border:1px solid var(--stroke-2);border-radius:11px;padding:10px 12px;font-size:12.5px;box-shadow:var(--shadow);max-width:250px;opacity:0;transition:opacity .12s;color:var(--txt)}
+.mtip b{font-family:var(--fh);font-size:13px}
+.mtip .sc{display:flex;gap:12px;margin-top:6px;color:var(--txt-mut)}
+.mtip .sc i{font-style:normal;font-family:var(--fh);color:var(--txt)}
+
+/* DASHBOARD */
+.dash{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:720px){.dash{grid-template-columns:repeat(2,1fr)}}
+.dcard{background:var(--panel);border:1px solid var(--stroke);border-radius:14px;padding:13px 14px;cursor:pointer;transition:.18s;position:relative;overflow:hidden;backdrop-filter:blur(8px)}
+.dcard:hover{transform:translateY(-2px);border-color:var(--stroke-2)}
+.dcard.on{border-color:var(--dc);box-shadow:0 0 0 1px var(--dc), var(--shadow)}
+.dcard .n{font-family:var(--fh);font-weight:700;font-size:24px;line-height:1;color:var(--dc)}
+.dcard .l{font-size:11px;color:var(--txt-mut);margin-top:4px;letter-spacing:.2px}
+.dcard .bar{position:absolute;left:0;bottom:0;height:3px;background:var(--dc);transition:width .5s}
+
+/* CONTROLS */
+.controls{position:sticky;top:60px;z-index:30;background:linear-gradient(180deg,var(--nav-a),var(--nav-b));backdrop-filter:blur(12px);border:1px solid var(--stroke);border-radius:16px;padding:14px;margin-bottom:8px}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.fbtn{display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border-radius:11px;border:1px solid var(--stroke);background:var(--panel-2);color:var(--txt-dim);font-size:13px;font-family:var(--fb);cursor:pointer;transition:.18s}
+.fbtn:hover{color:var(--txt);border-color:var(--stroke-2)}
+.fbtn .n{font-family:var(--fh);font-size:11.5px;background:color-mix(in srgb,var(--txt) 10%,transparent);padding:1px 7px;border-radius:7px}
+.fbtn.on{color:#fff;border-color:transparent}
+.fbtn.on .n{background:rgba(0,0,0,.2);color:#fff}
+.fbtn[data-f="all"].on{background:linear-gradient(100deg,var(--biz),var(--teal))}
+.fbtn[data-f="problematic"].on{background:linear-gradient(100deg,#ff8a8a,var(--warn))}
+.fbtn[data-f="passed_but_weak"].on{background:linear-gradient(100deg,#e6a24a,var(--amber))}
+.fbtn[data-f="should_have_passed"].on{background:linear-gradient(100deg,#9a78ff,var(--soc))}
+.fbtn[data-f="reconstructed"].on{background:linear-gradient(100deg,#5b95ff,var(--q2))}
+.row2{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}
+.lotchips{display:flex;gap:6px;align-items:center}
+.lotchips .lbl{font-size:11px;color:var(--txt-mut);text-transform:uppercase;letter-spacing:.5px;margin-right:2px}
+.lchip{padding:7px 11px;border-radius:9px;border:1px solid var(--stroke);background:var(--panel-2);color:var(--txt-dim);font-size:12.5px;cursor:pointer;transition:.15s}
+.lchip:hover{color:var(--txt)}
+.lchip.on{background:var(--txt);color:var(--bg);border-color:transparent}
+.search{flex:1;min-width:180px;display:flex;align-items:center;gap:9px;background:var(--panel-2);border:1px solid var(--stroke);border-radius:11px;padding:9px 12px}
+.search input{flex:1;background:none;border:none;outline:none;color:var(--txt);font-family:var(--fb);font-size:13.5px}
+.search input::placeholder{color:var(--txt-mut)}
+.search svg{color:var(--txt-mut)}
+.sort{display:flex;align-items:center;gap:8px;color:var(--txt-mut);font-size:12.5px}
+.sort select{background:var(--panel-2);border:1px solid var(--stroke);color:var(--txt);border-radius:10px;padding:8px 10px;font-family:var(--fb);font-size:13px;outline:none;cursor:pointer}
+.notebar{margin:14px 0 0;font-size:13px;color:var(--q2);background:color-mix(in srgb,var(--q2) 8%,transparent);border:1px solid color-mix(in srgb,var(--q2) 26%,transparent);border-radius:12px;padding:12px 14px;display:none}
+.notebar.show{display:block}
+.notebar b{color:var(--txt)}
+
+/* CARDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;margin-top:18px}
+.card{background:var(--panel);border:1px solid var(--stroke);border-radius:18px;padding:18px;cursor:pointer;position:relative;overflow:hidden;transition:.2s;display:flex;flex-direction:column;backdrop-filter:blur(8px)}
+.card:hover{transform:translateY(-3px);border-color:var(--stroke-2);box-shadow:var(--shadow)}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--qc,var(--q4))}
+.card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px}
+.card h3{font-size:16px;font-weight:600;letter-spacing:-.2px}
+.card .meta{font-size:11.5px;color:var(--txt-mut);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.qbadge{flex:none;font-family:var(--fh);font-weight:700;font-size:11px;padding:4px 9px;border-radius:8px;white-space:nowrap}
+.card p.idea{font-size:13px;color:var(--txt-dim);margin:6px 0 14px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.scores{margin-top:auto;display:flex;flex-direction:column;gap:9px}
+.scline{display:flex;align-items:center;gap:10px}
+.scline .lb{font-size:11px;color:var(--txt-mut);width:64px;flex:none;text-transform:uppercase;letter-spacing:.4px}
+.track{flex:1;height:7px;border-radius:6px;background:var(--track);overflow:hidden}
+.fill{height:100%;border-radius:6px}
+.fill.biz{background:linear-gradient(90deg,var(--biz),var(--biz-2))}
+.fill.soc{background:linear-gradient(90deg,var(--soc),var(--soc-2))}
+.scline .v{font-family:var(--fh);font-weight:600;font-size:13px;width:30px;text-align:right}
+.scline .cl{font-size:12px;width:15px;text-align:center;flex:none}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.pill{font-size:10.5px;padding:4px 9px;border-radius:999px;border:1px solid var(--stroke);color:var(--txt-dim);display:inline-flex;gap:5px;align-items:center}
+.pill.p-problematic{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 40%,transparent);background:color-mix(in srgb,var(--warn) 8%,transparent)}
+.pill.p-passed_but_weak{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 40%,transparent);background:color-mix(in srgb,var(--amber) 8%,transparent)}
+.pill.p-should_have_passed{color:var(--soc);border-color:color-mix(in srgb,var(--soc) 40%,transparent);background:color-mix(in srgb,var(--soc) 8%,transparent)}
+.pill.p-recon{color:var(--q2);border-color:color-mix(in srgb,var(--q2) 40%,transparent);background:color-mix(in srgb,var(--q2) 8%,transparent)}
+.card .verdict-print{display:none}
+.empty{grid-column:1/-1;text-align:center;color:var(--txt-mut);padding:50px 0;font-size:14px}
+
+/* EXCLUŞI */
+.xtable{width:100%;border-collapse:collapse;font-size:13px;border-radius:14px;overflow:hidden;border:1px solid var(--stroke)}
+.xtable th,.xtable td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--stroke)}
+.xtable th{font-family:var(--fh);font-weight:500;font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--txt-mut);background:var(--panel-2)}
+.xtable tr:last-child td{border-bottom:none}
+.xtable tbody tr{transition:.15s} .xtable tbody tr:hover{background:var(--panel-2)}
+.xtable td.name{font-weight:500;color:var(--txt)}
+.xtable td.sc{font-family:var(--fh);font-weight:600}
+.xlot{font-size:11px;color:var(--txt-mut)}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;z-index:80;background:color-mix(in srgb,var(--bg) 55%,rgba(0,0,0,.6));backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding:34px 16px;overflow-y:auto}
+.modal-bg.open{display:flex}
+.modal{width:100%;max-width:820px;background:linear-gradient(180deg,var(--modal-a),var(--modal-b));border:1px solid var(--stroke-2);border-radius:22px;box-shadow:var(--shadow);position:relative;animation:pop .25s cubic-bezier(.2,.8,.2,1)}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+.modal .mhead{padding:26px 28px 20px;border-bottom:1px solid var(--stroke);position:relative;overflow:hidden}
+.modal .mhead::after{content:"";position:absolute;inset:0;background:radial-gradient(320px 130px at 100% -30%,color-mix(in srgb,var(--qc,var(--biz)) 16%,transparent),transparent);pointer-events:none}
+.mclose{position:absolute;top:18px;right:18px;width:36px;height:36px;border-radius:10px;border:1px solid var(--stroke);background:var(--panel);color:var(--txt-dim);cursor:pointer;display:grid;place-items:center;z-index:2}
+.mclose:hover{color:var(--txt);border-color:var(--stroke-2)}
+.modal h3.mt{font-size:22px;font-weight:600;padding-right:44px;letter-spacing:-.3px}
+.mmeta{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:10px;font-size:12.5px;color:var(--txt-mut)}
+.mscores{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.mscore{flex:1;min-width:150px;background:var(--panel-2);border:1px solid var(--stroke);border-radius:13px;padding:12px 14px}
+.mscore .lb{font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--txt-mut)}
+.mscore .val{font-family:var(--fh);font-weight:700;font-size:26px;line-height:1;margin:5px 0 8px}
+.mscore.biz .val{color:var(--biz)} .mscore.soc .val{color:var(--soc)}
+.mbody{padding:22px 28px 28px}
+.verdict{background:var(--panel);border:1px solid var(--stroke);border-left:3px solid var(--qc,var(--biz));border-radius:12px;padding:15px 16px;font-size:14.5px;color:var(--txt);margin-bottom:22px}
+.block{margin-bottom:22px}
+.block > h4{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--txt-mut);display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.block > h4 .ic{color:var(--biz)}
+.block.neg > h4 .ic{color:var(--warn)}
+.item{display:flex;gap:11px;padding:9px 0;border-bottom:1px solid var(--stroke);font-size:13.4px;color:var(--txt-dim)}
+.item:last-child{border-bottom:none}
+.item .mk{flex:none;margin-top:3px} .item .mk.pos{color:var(--biz)} .item .mk.neg{color:var(--warn)}
+.item .tx{flex:1}
+.src{display:inline-flex;align-items:center;gap:5px;font-size:11px;margin-top:5px;padding:3px 9px;border-radius:999px;border:1px solid var(--stroke);color:var(--txt-mut);text-decoration:none;transition:.15s}
+.src:hover{color:var(--txt);border-color:var(--stroke-2)}
+.src.web{color:var(--q2);border-color:color-mix(in srgb,var(--q2) 32%,transparent)}
+.claim{background:var(--panel-2);border:1px solid var(--stroke);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.claim .cd{font-size:13px;color:var(--txt-dim)} .claim .cd b{color:var(--amber);font-weight:600}
+.claim .cr{font-size:13px;color:var(--txt);margin-top:6px;display:flex;gap:8px} .claim .cr b{color:var(--warn);font-weight:600;flex:none}
+.reqlist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px}
+.reqlist li{display:flex;gap:10px;font-size:13.4px;color:var(--txt-dim)} .reqlist li .ic{flex:none;margin-top:2px;color:var(--teal)}
+.readbox{background:var(--panel-2);border:1px dashed var(--stroke-2);border-radius:12px;padding:14px 16px}
+.readbox .rl{font-size:13.4px;color:var(--txt-dim);padding:6px 0;display:flex;gap:9px}
+.readbox .rl code{font-family:var(--fh);font-size:12px;background:color-mix(in srgb,var(--biz) 12%,transparent);color:var(--biz);padding:1px 7px;border-radius:6px}
+.folder-link{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-size:12.5px;color:var(--biz);text-decoration:none;padding:9px 13px;border:1px solid color-mix(in srgb,var(--biz) 32%,transparent);border-radius:11px;background:color-mix(in srgb,var(--biz) 7%,transparent)}
+.folder-link:hover{background:color-mix(in srgb,var(--biz) 14%,transparent)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--stroke);padding:34px 0 60px;color:var(--txt-mut);font-size:12.5px}
+footer .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+footer b{color:var(--txt-dim);font-family:var(--fh);font-weight:500}
+.hidden{display:none!important}
+
+/* PRINT */
+@media print{
+  html[data-theme="dark"]{--bg:#fff;--txt:#111;--txt-dim:#333;--txt-mut:#555;--panel:#fff;--panel-2:#f7f7f7;--stroke:#ddd;--stroke-2:#ccc;--track:#e6e6e6;--biz:#0a7d55;--soc:#6a3fd0;--q1:#0a7d55;--q2:#1f5fbf;--q3:#6a3fd0;--q4:#666}
+  .nav,.controls,.matrix-shell,.mtip,.modal-bg,.iconbtn,#mlegend,.dash,footer .cols{box-shadow:none}
+  .nav,.controls .row2,.controls .filters,.mtip,.modal-bg,#matrice,.dash{display:none!important}
+  body{background:#fff!important;color:#111}
+  section{padding:14px 0;break-inside:avoid}
+  .card{break-inside:avoid;box-shadow:none;border:1px solid #ccc;-webkit-line-clamp:unset}
+  .card p.idea{-webkit-line-clamp:unset;display:block}
+  .card .verdict-print{display:block;margin-top:10px;font-size:12px;color:#333;border-top:1px dashed #ccc;padding-top:8px}
+  .grid{grid-template-columns:1fr 1fr;gap:10px}
+  a{color:#111;text-decoration:none}
+}
+</style>
+</head>
+<body>
+
+<div class="nav"><div class="wrap">
+  <div class="brand"><span class="dot"></span>Impact Fund · Evaluare independentă</div>
+  <nav>
+    <a href="#concluzii">Concluzii</a>
+    <a href="#potential">Potențial</a>
+    <a href="#semnale">Atenție</a>
+    <a href="#metodologie">Metodologie</a>
+    <a href="#matrice">Matrice</a>
+    <a href="#aplicanti">Aplicanți</a>
+    <a href="#exclusi">Excluși</a>
+    <button class="iconbtn" id="printbtn" title="Printează / salvează ca PDF" aria-label="Print">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+    </button>
+  </nav>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <span class="eyebrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg> Analiză „în orb" · două axe</span>
+  <h1>Cine e o <span class="grad">întreprindere socială viabilă</span> — și cine depinde de granturi</h1>
+  <p class="lead" id="lead"></p>
+  <div class="stats" id="stats"></div>
+  <div class="disclaimer" id="disc"></div>
+</div></header>
+
+<section id="concluzii"><div class="wrap">
+  <div class="sec-head"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg></span><h2>Concluzii principale</h2></div>
+  <p class="sec-sub">Ce a scos la iveală verificarea contradictorie (surse 📄 din pachet și 🌐 web), dincolo de scoruri.</p>
+  <div class="insights" id="insights"></div>
+</div></section>
+
+<section id="potential"><div class="wrap">
+  <div class="sec-head"><span class="ic" style="color:var(--q1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2.5l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6.1 21.3l1.2-6.6L2.5 9.5l6.6-.9z"/></svg></span><h2>Candidați cu potențial real pentru Fondul de Impact</h2></div>
+  <p class="sec-sub">Nu „cine a intrat", ci „pe cine are sens să finanțeze Fondul de Impact". Filtru onest pe patru condiții: <b style="color:var(--biz)">afacere viabilă</b> · <b style="color:var(--soc)">impact autentic</b> · <b style="color:var(--q2)">adiționalitate</b> (investiția contează, nu deadweight) · <b>integritate</b>. Toți rămân 🟡 galben (nu „verde"): potențial real, dar fiecare are o rezervă de închis — vezi „de verificat" pe card. Apasă un card pentru dosarul complet.</p>
+  <div id="fav-t1"></div>
+  <div id="fav-t2"></div>
+  <div id="fav-ex"></div>
+</div></section>
+
+<section id="semnale"><div class="wrap">
+  <div class="sec-head"><span class="ic" style="color:var(--warn)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></span><h2>Puncte de atenție înainte de contractare</h2></div>
+  <p class="sec-sub">Două lucruri care nu țin de scor, dar cer atenție înainte de contractare: dosare cu documente amestecate și semnale de integritate. Apasă un rând pentru dosarul complet.</p>
+  <div class="signal-grid">
+    <div class="signal-col contam"><h3><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l6-6M9 9l6 6"/></svg> Data room contaminat</h3><div id="sig-contam"></div></div>
+    <div class="signal-col integ"><h3><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg> Semnale de integritate</h3><div id="sig-integ"></div></div>
+  </div>
+</div></section>
+
+<section id="metodologie"><div class="wrap">
+  <div class="sec-head"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><h2>Metodologia: două axe, patru cadrane</h2></div>
+  <p class="sec-sub">Fiecare aplicant e evaluat pe două axe independente. Intersecția lor arată dacă e o afacere autosustenabilă, o misiune fără model economic — sau ambele.</p>
+  <div class="axes" id="axes"></div>
+  <div class="quads" id="quads"></div>
+</div></section>
+
+<section id="matrice"><div class="wrap">
+  <div class="sec-head"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><circle cx="8" cy="15" r="1.6"/><circle cx="13" cy="9" r="1.6"/><circle cx="18" cy="6" r="1.6"/></svg></span><h2>Matricea afacere × social</h2></div>
+  <p class="sec-sub">Orizontal — viabilitatea de afacere; vertical — profunzimea misiunii sociale. Colțul din dreapta-sus (★) e ținta fondului. Apasă un punct pentru dosarul complet.</p>
+  <div class="matrix-shell">
+    <svg id="matrix" viewBox="0 0 760 570" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="matrix-legend" id="mlegend"></div>
+  </div>
+</div></section>
+
+<section id="aplicanti"><div class="wrap">
+  <div class="sec-head"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg></span><h2>Dosarele aplicanților</h2></div>
+  <p class="sec-sub">20 de dosare analizate în detaliu: 14 semifinaliști + 6 care meritau semifinala. Filtrează pe cadran, lot sau tip; sortează, caută — apasă un card pentru dosarul complet.</p>
+
+  <div class="dash" id="dash"></div>
+
+  <div class="controls">
+    <div class="filters" id="filters"></div>
+    <div class="row2">
+      <div class="lotchips" id="lotchips"><span class="lbl">Lot</span></div>
+      <label class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="q" type="text" placeholder="Caută după nume, oraș sau idee…">
+      </label>
+      <div class="sort">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4v16M7 20l-3-3M7 4l3 3M17 20V4M17 4l-3 3M17 20l3-3"/></svg>
+        Sortare
+        <select id="sort">
+          <option value="business">Scor afacere ↓</option>
+          <option value="social">Scor social ↓</option>
+          <option value="lot">Lot</option>
+          <option value="name">Nume A–Z</option>
+        </select>
+      </div>
+    </div>
+    <div class="notebar" id="notebar"></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</div></section>
+
+<section id="exclusi"><div class="wrap">
+  <div class="sec-head"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg></span><h2>Corect eliminați (19)</h2></div>
+  <p class="sec-sub">Aplicanți care nu au trecut de filtrul de afacere — pe drept. Scorul e pe axa de afacere; motivul, pe scurt.</p>
+  <table class="xtable"><thead><tr><th>Aplicant</th><th>Lot</th><th>Afacere</th><th>De ce a picat</th></tr></thead><tbody id="xbody"></tbody></table>
+</div></section>
+
+<footer><div class="wrap"><div class="cols">
+  <div><b>Despre evaluare.</b><br>Evaluare independentă „în orb", realizată de EcoVisio (partener în proiectul Impact Space), fără cunoașterea selecției oficiale. Un sprijin pentru decizia Fondului de Impact, nu o decizie finală.</div>
+  <div><b>Surse.</b><br>📄 = document din pachetul aplicantului (link → folderul OneDrive al concursului). 🌐 = verificare web (link direct).</div>
+  <div><b>Două axe.</b><br>Afacere (0–100): filtru dur pe autofinanțare. Social (0–100): spectrul CSR → întreprindere socială.</div>
+  <div><b>Notă.</b><br>Scorurile reflectă evaluarea <i>după</i> verificarea contradictorie. Dosarele conțin amestecări de documente între aplicanți.</div>
+</div></div></footer>
+
+<div class="modal-bg" id="modalbg"><div class="modal" id="modal"></div></div>
+<div class="mtip" id="mtip"></div>
+
+<script>
+const DATA = {"meta": {"title": "Impact Fund — Evaluare independentă a aplicanților", "subtitle": "Proiectul Impact Space · Fondul de Impact (FEE, cu sprijinul Suediei). Analiză independentă a EcoVisio, «în orb», pe două axe: viabilitate de afacere și profunzime a misiunii sociale.", "methodology": {"business": "Axa de afacere (0–100): 7 criterii — autofinanțare (25), economia unității (20), client/piață în RM (15), scalabilitate (12), impact (12), echipă (10), realism (6). Filtru dur pe autofinanțare: dacă modelul nu iese pe zero operațional fără granturi în 2–3 ani, scorul scade.", "social": "Axa socială (0–100): cât de autentică e misiunea — spectrul CSR → afacere responsabilă → întreprindere socială → proiect social. Criterii: centralitatea misiunii, adiționalitate, mecanism integrat, mission-lock, onestitate. Legea 223/2017 e context, nu factor principal.", "quadrants": {"I": "★ Întreprindere socială reală — afacere solidă ȘI misiune profundă (colțul-țintă al fondului).", "II": "Afacere cu impact cosmetic (CSR) — afacere solidă, misiune subțire.", "III": "Misiune fără afacere — misiune reală/WISE, dar nesustenabilă fără subvenție.", "IV": "Slab pe ambele axe."}, "disclaimer": "Evaluare făcută «în orb» (fără a cunoaște selecția oficială). Instrument de sprijin al deciziei, nu decizie finală. ⚠ Dosarele conțin amestecări de documente între aplicanți (data room contaminat)."}, "filters": {"should_have_passed": "Nu au trecut în semifinală, dar meritau (mai puternici pe afacere decât semifinaliștii marginali).", "passed_but_weak": "Au trecut în semifinală, dar sunt candidați slabi (scor mic / semnale de integritate).", "reconstructed": "Cum ar arăta semifinala dacă ar fi intrat cei care meritau (cu respectarea cotelor pe loturi).", "problematic": "Cazurile cele mai problematice — semnale de integritate (0 venit comercial, cifre contradictorii, documente ale altui aplicant, denaturări)."}}, "applicants": [{"id": "eco_village", "name": "SRL Rumix Stil — «Eco-Village Văleni»", "lot": 3, "city": "Cahul", "status": "semifinalist", "business": 79, "bclass": "🟡", "social": 60, "szone": "🟣", "quadrant": "I (limită)", "tags": ["problematic"], "idea": "Complex de ecoturism în rezervația Lunca Prutului (pensiune, restaurant, vinărie, evenimente, tururi); plătesc turiști străini de pe croazierele dunărene și clienți locali.", "verdict": "Afacere reală, în creștere, dar cu semne de întrebare: profitul 2024 diferă între două rapoarte oficiale, iar încărcarea de iarnă (justificarea proiectului) nu e dovedită.", "strengths": [{"text": "Venit 2025 = 1 844 100 lei, profit net 638 079 lei (confirmat oficial); afacere în creștere.", "src": "📄 Situație financiară 2025"}, {"text": "Sat recunoscut internațional (UNWTO Best Tourism Village 2023).", "src": "🌐 unwto.org", "url": "https://www.unwto.org/tourism-villages"}, {"text": "Grantul finanțează investiție (salon multifuncțional încălzit), nu cheltuieli curente.", "src": "📄 Formular_buget"}], "weaknesses": [{"text": "Profit net 2024 apare în două valori oficiale: 254 973 lei (raport 2024) vs 2 854 lei (coloana comparativă a raportului 2025) — nereconciliat.", "src": "📄 SF 2024.pdf și XLSX P&L"}, {"text": "Afiliere structurală SRL Rumix Stil ↔ ONG Ecoscut (aceeași persoană, Nicu Știrbeț) — risc de amestec de fonduri.", "src": "🌐 civic.md", "url": "https://civic.md"}, {"text": "Încărcarea de iarnă (miezul proiectului) nu e confirmată; croazierele nu acoperă ian.–feb.", "src": "📄 Formular_plan_afaceri"}], "claims": [{"claim": "Profit net 2024 solid.", "reality": "Două rapoarte oficiale dau cifre incompatibile (254 973 vs 2 854 lei), fără explicație.", "src": "📄 SF 2024 vs raport 2025"}], "request": ["Explicația diferenței de profit 2024", "Extras de cont pentru co-finanțare", "Politica de separare a fondurilor SRL/ONG", "Contracte/rezervări de iarnă"], "read": ["Situație financiară 2024 — profit net (rd.180)", "Formular_plan_afaceri — încărcarea sezonieră / veniturile de iarnă"], "recon_in": true, "recon_change": "stays"}, {"id": "vila_dorului", "name": "SRL Vila Dorului", "lot": 3, "city": "Dubăsari", "status": "semifinalist", "business": 75, "bclass": "🟡", "social": 56, "szone": "🟣", "quadrant": "II", "tags": [], "idea": "Agroturism inclusiv pe Nistru (cazare, restaurant, agrement; bazin adaptat și căsuțe accesibile). Plătește turistul.", "verdict": "Cea mai profitabilă afacere din listă, dar «incluziunea» e mediu accesibil, nu angajare de vulnerabili, iar grantul finanțează un bazin care pare să existe deja.", "strengths": [{"text": "Profit net 2025 = 3 802 083 lei, 2024 = 1 310 937 lei — confirmat prin raport oficial (RSF).", "src": "📄 RSF 2025"}, {"text": "Cifră de afaceri ~7 mln lei, 12 angajați — afacere matură.", "src": "📄 Fisa date generale"}], "weaknesses": [{"text": "Bazinul figurează deja în infrastructura existentă, dar grantul finanțează «construcția bazinului inclusiv» → risc de dublă finanțare.", "src": "📄 plan Tab.23 / cerere Tab.5"}, {"text": "Incluziunea = mediu accesibil, NU angajare de vulnerabili; câmpul «defavorizate» e gol, ANOFM invocat fără documente.", "src": "📄 Fisa date generale"}, {"text": "Suma grantului apare în 4 versiuni contradictorii; cash-flow-ul (2,2 mln lei) nu se potrivește cu cererea (400 000 lei).", "src": "📄 cerere/plan/buget"}], "claims": [{"claim": "Bazin inclusiv nou (construcție).", "reality": "Bazinul apare deja în lista de facilități existente — probabil adaptare, nu construcție.", "src": "📄 plan Tab.23"}, {"claim": "Angajează persoane defavorizate (ANOFM: Da).", "reality": "Numărul de angajați vulnerabili e necompletat; niciun document ANOFM.", "src": "📄 Fisa"}], "request": ["Buget unic, coerent", "Statutul bazinului (nou vs adaptare)", "Documente ANOFM", "Încărcarea lunară"], "read": ["RSF 2025 — profit net (rd.180)", "Formular_plan_afaceri — Tab.23 (infrastructură existentă, bazin)"], "recon_in": true, "recon_change": "stays"}, {"id": "robospace", "name": "ÎS Robospace SRL", "lot": 2, "city": "Ungheni", "status": "semifinalist", "business": 70, "bclass": "🟡", "social": 81, "szone": "🔵", "quadrant": "I", "tags": ["problematic"], "idea": "Produs digital de terapie ABA la domiciliu pentru copiii cu autism (abonament online), peste o afacere STEM/robotică funcțională.", "verdict": "Produs cu misiune profundă și piață reală neacoperită, dar dosarul are o problemă de integritate: raportul financiar atașat aparține altei firme.", "strengths": [{"text": "Nevoie reală: statul NU decontează terapia ABA; familiile plătesc ~120 lei/oră; doar 2 centre ABA în Chișinău, unul fiind fondatorul (SOS Autism).", "src": "🌐 suntparinte.md", "url": "https://suntparinte.md/terapia-pentru-copiii-cu-autism-un-lux-nedecontat-de-statul-moldovenesc/"}, {"text": "Produs digital scalabil, mult mai ieftin decât terapia clasică (~500–1000 EUR/lună).", "src": "📄 Formular_plan_afaceri"}], "weaknesses": [{"text": "⚠ Raportul financiar din dosar aparține firmei BRIHUNET ENGLISH SRL, nu Robospace — situația financiară proprie lipsește.", "src": "📄 Situatia financiara (antet BRIHUNET)"}, {"text": "În Fisa, «profit 2025 = 1 178 972 lei» este de fapt CIFRA DE AFACERI, nu profitul.", "src": "📄 Fisa date generale"}, {"text": "Prețurile produsului ABA nu sunt fixate în dosar (doar calitativ); baza de plătitori e îngustă.", "src": "📄 plan Tab.16"}], "claims": [{"claim": "Profit 2025 = 1 178 972 lei.", "reality": "E cifra de afaceri; profitul net real nu poate fi verificat (raport lipsă / al altei firme).", "src": "📄 Fisa + raport BRIHUNET"}], "request": ["Raportul financiar oficial al Robospace 2025", "Detalierea «altor venituri» (granturi vs comercial)", "Lista de prețuri ABA", "Dovada co-finanțării"], "read": ["Situatia financiara 2025 — verifică ANTETUL (a cui firmă e)", "Formular_plan_afaceri — strategia de preț ABA (Tab.16)"], "recon_in": true, "recon_change": "stays", "fund_fit": "favorite", "fit_why": "Cea mai profundă nevoie neacoperită de stat (terapie ABA pentru autism) plus produs digital scalabil, mult mai ieftin decât terapia clasică.", "fit_cond": "Condiționat de: raportul financiar propriu (cel din dosar aparține altei firme) și o grilă de prețuri clară.", "fit_conditional": true}, {"id": "casmed", "name": "AO «CASMED»", "lot": 2, "city": "Bălți", "status": "semifinalist", "business": 78, "bclass": "🟡", "social": 76, "szone": "🔵", "quadrant": "I*", "tags": ["passed_but_weak"], "idea": "Centru de reabilitare; proiectul «REFIT» = reechipare (5 aparate, reacreditare). Plătesc pacienții; reduceri pentru vulnerabili.", "verdict": "Organizație mare și reală, cu misiune de sănătate autentică — dar «afacerea» prezentată e o felie care ascunde că 86,7% din venit sunt bani de donatori, plus deadweight ridicat.", "strengths": [{"text": "Organizație solidă: cifră totală ~23,7 mln lei, 60 angajați (15 vulnerabili), sediu propriu; contract CNAM din 2011.", "src": "📄 Anexa 5 / ONG17"}, {"text": "Activitatea economică propriu-zisă e profitabilă (~998k pe 1,94 mln lei venit din servicii).", "src": "📄 ONG17"}], "weaknesses": [{"text": "«Cifra 3,15 mln / profit 2,14 mln» e o felie: din 23,7 mln, 86,7% (20,56 mln) sunt mijloace cu destinație specială (granturi).", "src": "📄 ONG17"}, {"text": "Deadweight: o organizație de 24 mln lei cere 20 000 EUR pentru echipament pe care l-ar putea cumpăra singură.", "src": "📄 analiză"}, {"text": "Raportul financiar 2025 semnat NU e în dosar (profitul 2,14 mln e doar declarat).", "src": "📄 dosar / evaluare AC"}], "claims": [{"claim": "Cifră de afaceri 3,15 mln, profit 2,14 mln lei.", "reality": "E o felie curată; venitul total real e 23,7 mln lei, din care 86,7% granturi.", "src": "📄 ONG17"}], "request": ["Raportul financiar 2025 semnat", "Ponderea granturilor în cifra de afaceri", "Co-finanțare majorată (deadweight)"], "read": ["Anexa 5 / ONG17 — compoziția venitului (activitate economică vs mijloace cu destinație specială)"], "recon_in": true, "recon_change": "stays"}, {"id": "carom", "name": "Carom-RS SRL — «Dejunel Circular»", "lot": 3, "city": "Chișinău", "status": "semifinalist", "business": 67, "bclass": "🟡", "social": 40, "szone": "⚪", "quadrant": "II", "tags": [], "idea": "Fulgi de cereale fără gluten din valorificarea subproduselor (model Zero Waste); vânzări B2B.", "verdict": "Afacere reală și profitabilă, dar cu impact social cosmetic («1 loc de muncă») și fără raport financiar oficial — mai degrabă «afacere cu impact» decât întreprindere socială.", "strengths": [{"text": "Afacere reală: venit 2025 = 2 147 691 lei (+28%), profit 123 787 lei; model circular integrat.", "src": "📄 venituri 2025.xlsx"}, {"text": "Grantul finanțează echipament, nu cheltuieli curente; firma deja co-investește.", "src": "📄 formular Tab.8"}], "weaknesses": [{"text": "Buget cu 3 structuri de co-finanțare incompatibile (13,4% / 10% / 27,8%).", "src": "📄 buget vs plan Tab.25-26"}, {"text": "Relocarea la Milești Mici nu e confirmată — echipamentul se cumpără pentru un spațiu care juridic nu există încă.", "src": "📄 Fisa vs plan Tab.23"}, {"text": "Nu există raport financiar oficial semnat (venituri.xlsx e neoficial; 123 787 ≠ 115 256 din Fisa).", "src": "📄 venituri.xlsx / Fisa"}, {"text": "Impact declarativ: «1 loc de muncă» (dar experiență reală anterioară cu un angajat cu deficiență de auz).", "src": "📄 formular Tab.7/13"}], "claims": [{"claim": "Situație financiară prezentată.", "reality": "Doar un Excel neoficial, fără semnătură; cifrele nu se potrivesc cu Fisa.", "src": "📄 venituri.xlsx / Fisa"}], "request": ["Rapoarte financiare oficiale 2024/2025", "Contractul pentru spațiul de 240 m²", "Buget unic", "Dovada incluziunii"], "read": ["venituri 2025.xlsx vs Fisa — potrivirea profitului", "Formular_plan_afaceri — Tab.26 (structura co-finanțării)"], "recon_in": false, "recon_change": "out"}, {"id": "filantropia", "name": "AO «Filantropia Creștină» (viitor SRL «Eterna Social»)", "lot": 1, "city": "Orhei", "status": "semifinalist", "business": 65, "bclass": "🟡", "social": 76, "szone": "🔵", "quadrant": "I", "tags": [], "idea": "Servicii funerare sociale — înmormântări demne la preț accesibil, cu pachete gratuite/reduse pentru familiile sărace.", "verdict": "Misiune socială autentică și piață reală de plătitori, dar modelul financiar e prea optimist: marja pachetului de bază nu rezistă la verificare.", "strengths": [{"text": "Cerere reală: ~1 700–2 160 decese/an în Orhei+Rezina; ținta de 36–72 pachete = doar ~2–4% din piață.", "src": "🌐 statistica.gov.md", "url": "https://statistica.gov.md/ro/situatia-demografica-in-anul-2024-9696_61837.html"}, {"text": "Misiune integrată: pachete gratuite/reduse pentru vulnerabili, din venituri proprii.", "src": "📄 cerere / plan"}, {"text": "Grantul finanțează capital (dric, cameră frigorifică).", "src": "📄 buget"}], "weaknesses": [{"text": "Marja de 75% e pe P&L-ul agregat, nu pe pachetul de 4000 lei; costul direct nedescompus → marjă reală ~25–50%.", "src": "📄 plan Tab.16/29"}, {"text": "Nișa din Orhei e deja ocupată de firme cu ciclu complet (Funerare Orhei, Funerarius).", "src": "🌐 funerareorhei.md", "url": "https://funerareorhei.md/"}, {"text": "Co-finanțarea (5 904 EUR) e majoritar in-kind (timp de muncă), nu bani.", "src": "📄 buget"}], "claims": [{"claim": "Marjă brută 75% pe servicii funerare.", "reality": "75% e pe P&L-ul general; pe pachetul de bază marja reală e probabil 25–50%.", "src": "📄 plan"}, {"claim": "Co-finanțare proprie 5 904 EUR.", "reality": "În buget e majoritar in-kind (salarii), nu contribuție monetară.", "src": "📄 buget"}], "request": ["Descompunerea costului pachetului de 4000 lei", "Dovada co-finanțării monetare"], "read": ["Formular_plan_afaceri — Tab.16 (prețuri), Tab.28–29 (P&L)", "Formular_buget — co-finanțarea"], "recon_in": true, "recon_change": "stays", "fund_fit": "favorite", "fit_why": "Misiune socială reală (înmormântări demne pentru familii sărace), piață de plătitori și grant care finanțează capital (dric, cameră frigorifică), nu cheltuieli curente.", "fit_cond": "De verificat: descompunerea costului pachetului de 4000 lei și co-finanțarea monetară.", "fit_conditional": false}, {"id": "youth_gagauzia", "name": "AO «Tineretul Găgăuziei» — «Mobile Event Hub»", "lot": 1, "city": "Comrat", "status": "semifinalist", "business": 62, "bclass": "🟠", "social": 52, "szone": "🟣", "quadrant": "II/IV", "tags": ["passed_but_weak"], "idea": "Închiriere de echipament de evenimente (sunet/lumini/scenă) + organizare de evenimente. Plătesc primării, ONG-uri, afaceri.", "verdict": "Model de afacere calculat corect, dar zero istoric de vânzări, piață supraevaluată și co-finanțare aproape inexistentă în bani.", "strengths": [{"text": "Pragul de rentabilitate e calculat coerent (54 comenzi/an); sudul RM e slab deservit.", "src": "📄 plan Tab.28-31"}, {"text": "Organizație activă, cu experiență de proiecte.", "src": "📄 dosar"}], "weaknesses": [{"text": "«Până la 500 de localități / 200–250 clienți» — în Găgăuzia sunt 32 de localități și ~26 primării; piața e supraevaluată de ~15 ori.", "src": "🌐 gagauzia.md", "url": "https://www.gagauzia.md/"}, {"text": "0 venit comercial: raportul ONG17 arată tot venitul 2024 (627 275 lei) ca mijloace cu destinație specială (granturi).", "src": "📄 ONG17"}, {"text": "Co-finanțare în bani doar 326 EUR (1,5%); restul (1 823 EUR) sunt salarii (in-kind).", "src": "📄 buget"}, {"text": "Nicio scrisoare de intenție / precomandă.", "src": "📄 dosar"}], "claims": [{"claim": "Piață de până la 500 de localități.", "reality": "Găgăuzia are 32 de localități; ținta reală din cerere e 10–15.", "src": "📄 plan vs 🌐 gagauzia.md"}], "request": ["Scrisori de intenție de la primării", "Co-finanțare monetară corectă", "Piața recalculată pe 32 de localități"], "read": ["declarația ONG17 — venit din activitate economică (rd.01012 = 0)", "Bizplan — analiza pieței (Tab.6)"], "recon_in": true, "recon_change": "stays"}, {"id": "casa_culorilor", "name": "AO «Casa Culorilor» — atelier Ebru", "lot": 1, "city": "Chișinău", "status": "semifinalist", "business": 54, "bclass": "🟠", "social": 72, "szone": "🔵", "quadrant": "III", "tags": [], "idea": "Atelier de artă și tehnica Ebru + art-terapie; plătesc familii/adulți/corporații, gratuit pentru vulnerabili.", "verdict": "Misiune reală și nișă unică (Ebru), dar zero istoric de vânzări și un model de venit intern contradictoriu.", "strengths": [{"text": "Nișă unică (Ebru), recunoaștere (record Guinness al fondatoarei); profil social puternic.", "src": "📄 CV / plan"}, {"text": "Prețul de 300 lei/oră e plauzibil pentru piața din Chișinău.", "src": "🌐 iticket.md", "url": "https://iticket.md/"}], "weaknesses": [{"text": "0 venit comercial (rd.070 = 0); numerar în cont doar 453 lei.", "src": "📄 Situație financiară 2025"}, {"text": "Două modele de venit incompatibile (300 lei/pers × 1200–2000 clienți vs 4800 lei/unitate × 11) — diferă de 3×.", "src": "📄 plan vs Prognoza xlsx"}, {"text": "Scrisoarea de co-finanțare se referă la ALT proiect («Culori pentru Suflet») și numește chiria «contribuție bănească».", "src": "📄 Scrisoare co-finanțare"}], "claims": [{"claim": "Co-finanțare bănească 3 000 EUR.", "reality": "E chiria (in-kind); numerarul organizației e 453 lei.", "src": "📄 buget / bilanț"}], "request": ["Un model de venit unic", "Scrisoare de co-finanțare corectată", "Dovada capacității de a plăti chiria"], "read": ["Situație financiară 2025 — rd.070 (venit economic)", "Prognoza financiara.xlsx vs plan — modelul de venit"], "recon_in": true, "recon_change": "stays"}, {"id": "mama_cafe", "name": "AO «Din Dragoste» — «Mama Cafe»", "lot": 1, "city": "Anenii Noi", "status": "semifinalist", "business": 50, "bclass": "🟠", "social": 82, "szone": "🔵", "quadrant": "III", "tags": [], "idea": "Hub multifuncțional: educație timpurie + suport parental + cafenea, cu abonamente de solidaritate gratuite pentru familii vulnerabile.", "verdict": "Cea mai profundă misiune socială din listă (mame, refugiați, sănătate mintală), dar cea mai slabă parte de afacere: prețurile nici nu sunt calculate.", "strengths": [{"text": "Impact profund și integrat: educație timpurie unde nu există alternative, prevenirea izolării mamelor, refugiați, implicarea taților.", "src": "📄 plan / cerere"}, {"text": "Cerere validată prin cercetare comunitară (85%); mobilizare reală (68 000 lei crowdfunding).", "src": "📄 plan"}], "weaknesses": [{"text": "Prețurile NU sunt calculate — autorii le amână pentru «etapa II»; previziunea de venit e nefundamentată.", "src": "📄 plan, prag de rentabilitate"}, {"text": "Anul 1 e pe pierdere; autofinanțarea completă nici nu e țintită (obiectiv: 60% acoperire).", "src": "📄 plan"}, {"text": "Piață mică (oraș ~9 000) cu venituri mici; dependență de chiria subvenționată de la liceu.", "src": "📄 plan"}], "claims": [{"claim": "Autofinanțare 60% în anul 1, 100% din anul 2.", "reality": "Afirmat, dar fără grilă de prețuri și fără previziune numerică fundamentată.", "src": "📄 plan"}], "request": ["Grila de prețuri", "Previziune de venit numerică fundamentată"], "read": ["Formular_plan_afaceri — secțiunea prag de rentabilitate și tabelele de venituri"], "recon_in": false, "recon_change": "out"}, {"id": "elementar", "name": "AO «Pro-Elementary» — parcul «ElementAr»", "lot": 2, "city": "Chișinău", "status": "semifinalist", "business": 43, "bclass": "🟠", "social": 50, "szone": "🟣", "quadrant": "IV", "tags": ["passed_but_weak"], "idea": "Parc interactiv de științe (Port Mall); bilete pentru familii și grupuri școlare.", "verdict": "Parc real și funcțional, dar previziunea de venit e umflată de ~3 ori și profitul e «zero» în toate documentele.", "strengths": [{"text": "Venit real 578 168 lei în ~4 luni (deschis 30.08.2025) — afacere care funcționează.", "src": "📄 Situație financiară 2025"}, {"text": "Component social organic (2 ghizi nevăzători, incluziune).", "src": "📄 plan"}], "weaknesses": [{"text": "Previziunea de 3 006 000 lei / 21 720 vizite vs propria estimare de 5 000–7 000 vizite — contradicție de 3–4×.", "src": "📄 plan Tab.27"}, {"text": "Prețul biletului de copil în model = 250 lei, real pe site = 200 lei.", "src": "🌐 elementar.md", "url": "https://elementar.md/"}, {"text": "Chirie 860k + salarii ~1 mln → prag atins la limită; sustenabilitatea depinde de un parteneriat (Flamingo Tur) neconcretizat.", "src": "📄 plan Tab.28"}], "claims": [{"claim": "Venit anual ~3 mln lei.", "reality": "Run-rate real ~1 mln lei/an; propria estimare de vizite e de 3–4× mai mică.", "src": "📄 plan vs situație financiară"}], "request": ["Frecventarea lunară reală", "Contractul cu Flamingo Tur", "Nota explicativă la raport"], "read": ["Situație financiară 2025 — venit real vs profit (=0)", "plan — Tab.27 (previziunea de vizite)"], "recon_in": true, "recon_change": "stays"}, {"id": "brio", "name": "BRIO SERVUS CLEANING SRL", "lot": 1, "city": "Chișinău", "status": "semifinalist", "business": 44, "bclass": "🟠", "social": 78, "szone": "🔵", "quadrant": "III", "tags": [], "idea": "Curățenie profesională (WISE) cu angajarea persoanelor cu dizabilități.", "verdict": "Întreprindere socială de inserție autentică, dar nesustenabilă economic: a lucrat pe pierdere chiar și cu subvenția de stat.", "strengths": [{"text": "Piață reală, plătitor terț (rezidenți, birouri); tarif de piață (200 lei/oră).", "src": "📄 plan Tab.16"}, {"text": "Misiune WISE integrată: fiecare loc de muncă = impact; 6 persoane cu dizabilități angajate.", "src": "📄 plan Tab.6"}], "weaknesses": [{"text": "2025 pe pierdere: −19 021 lei CHIAR CU subvenția ANOFM de 70 500 lei; fără subvenție ≈ −89 500.", "src": "📄 VEN12"}, {"text": "Subvenția ANOFM se plătește doar 6 luni, dar obligă păstrarea locului de muncă 12–18 luni fără bani.", "src": "🌐 anofm.md", "url": "https://anofm.md/ro/node/20050"}, {"text": "Marja operațională fără subvenție = 0% (model ajustat la zero 3 ani); co-finanțare 93,8% salarii (in-kind).", "src": "📄 Prognoza / buget"}], "claims": [{"claim": "Model sustenabil de afacere socială.", "reality": "Raportul oficial arată pierdere chiar cu subvenția; fără subvenție modelul nu se susține.", "src": "📄 VEN12"}], "request": ["Contractul ANOFM (program, durata obligației)", "P&L complet 2025", "Calculul costului real pe oră"], "read": ["VEN12 (declarația fiscală 2025) — venit vs cheltuieli", "plan — Tab.14 (productivitate redusă), Tab.16 (preț/oră)"], "recon_in": false, "recon_change": "out"}, {"id": "caroma", "name": "AO «Caroma Nord» — «Print Social»", "lot": 1, "city": "Bălți", "status": "semifinalist", "business": 38, "bclass": "🟠", "social": 52, "szone": "🟣", "quadrant": "IV", "tags": ["problematic"], "idea": "Tipografie socială (print, sublimare) cu angajarea refugiaților. Plătesc IMM-uri, ONG-uri, instituții.", "verdict": "Piață B2B reală, dar dosarul conține denaturări de fapte și trei versiuni ale modelului financiar — încrederea în cifre e subminată.", "strengths": [{"text": "Piață B2B reală de tipar; logică de investiție (echipament).", "src": "📄 plan"}, {"text": "Extras de lichiditate 115 205 lei.", "src": "📄 Dovada contributiei"}], "weaknesses": [{"text": "Trei versiuni incompatibile ale venitului anului 1 (480 000 / 404 000 / «12 000 EUR»).", "src": "📄 plan Tab.27/28/32"}, {"text": "«Capitala, peste 100 000 de locuitori» — Bălți are 94 546; e text copiat din alt document.", "src": "🌐 statistica.gov.md", "url": "https://recensamant.statistica.md/"}, {"text": "Comodatul e de 132,7 m², nu 500 m² (×3,8); amortizarea lipsește din P&L.", "src": "📄 contract comodat / plan"}, {"text": "Salariile refugiaților = 0,2 normă × 6 luni; grantul din plan (32k EUR) ≠ bugetul oficial (20k).", "src": "📄 buget vs plan"}], "claims": [{"claim": "500 m² spațiu de la primărie.", "reality": "Contractul de comodat e pentru 132,7 m².", "src": "📄 contract comodat"}, {"claim": "Bălți — capitală de peste 100 000 de locuitori.", "reality": "Bălți = 94 546 (recensământ 2024); frază copiată.", "src": "🌐 statistica.gov.md"}], "request": ["O singură versiune de venit/buget", "Includerea amortizării", "Sursa salariilor refugiaților după 6 luni"], "read": ["Formular_plan_afaceri — Tab.27–32 (versiunile de venit)", "CONTRACT COMODAT — suprafața reală"], "recon_in": false, "recon_change": "out"}, {"id": "social_eco", "name": "SRL Social Eco Edinets — seră socială", "lot": 1, "city": "Edineț", "status": "semifinalist", "business": 36, "bclass": "🟠", "social": 68, "szone": "🔵", "quadrant": "III", "tags": ["problematic"], "idea": "Seră socială pe lângă o locuință protejată; integrarea a 6 persoane cu dizabilități mintale. Plătesc gospodăriile locale.", "verdict": "Misiune reală, dar firmă «dormindă» fără istoric comercial — și, critic, planul de afaceri din dosar aparține altui aplicant (AlgaVet).", "strengths": [{"text": "Investiție reală, confirmată prin oferte (Cofealm, Viloterm — 172 667 lei).", "src": "📄 oferte"}, {"text": "Prețurile pieței (roșii, răsad) sunt realiste și conservatoare.", "src": "🌐 agromedia.md", "url": "https://agromedia.md/"}], "weaknesses": [{"text": "⚠ Planul de afaceri atașat e al proiectului AlgaVet (clinică veterinară) — profitul «83 457», «subvenții UE 50 000», «răsad 40%» nu au sursă în dosar.", "src": "📄 Formular_plan_afaceri (conține AlgaVet)"}, {"text": "Firmă dormindă: înființată 2024, cifră de afaceri / profit 2025 = 0, 0 angajați, capital 500 lei.", "src": "📄 Fisa / RAPORT 2025"}, {"text": "Salariile (~87 000 lei/an) sunt 100% pe grant; contribuție proprie 0.", "src": "📄 buget"}], "claims": [{"claim": "Plan de afaceri și previziuni ale serei.", "reality": "Documentul atașat descrie clinica veterinară AlgaVet, nu sera — dosar amestecat.", "src": "📄 Formular_plan_afaceri"}], "request": ["Planul/P&L corect al SEREI", "Previziune de venit cu prețuri", "Canale de vânzare confirmate"], "read": ["Formular_plan_afaceri — verifică al cui proiect e (AlgaVet vs seră)", "Fisa — cifra de afaceri 2025"], "recon_in": false, "recon_change": "out"}, {"id": "iq_games", "name": "AO «Asociația de Jocuri Intelectuale din RM» (IQ Games)", "lot": 2, "city": "Chișinău", "status": "semifinalist", "business": 22, "bclass": "🟠", "social": 56, "szone": "🟣", "quadrant": "IV", "tags": ["problematic", "passed_but_weak"], "idea": "Jocuri intelectuale (quiz, quest, campionate) și programe educaționale, cu angajarea persoanelor din grupuri vulnerabile.", "verdict": "Cel mai problematic caz: rapoartele oficiale arată zero venit comercial în 2 ani, deși cererea afirmă «peste 1,2 mln lei venituri proprii».", "strengths": [{"text": "Cerere reală pentru team-building/quiz corporativ (ca model de piață).", "src": "📄 context de piață"}, {"text": "Incluziune reală: 4 angajați din grupuri vulnerabile.", "src": "📄 cerere"}], "weaknesses": [{"text": "ONG17: venit din activitate economică (rd.070) = 0 în 2024 și 2025; tot venitul (4,0 mln lei) = mijloace cu destinație specială (granturi).", "src": "📄 Situația Financiară 2025"}, {"text": "Niciun contract B2B/B2G semnat; nota explicativă menționată nu e atașată.", "src": "📄 dosar"}], "claims": [{"claim": "Am generat venituri proprii de peste 1 200 000 lei.", "reality": "Contrazis de raportul oficial: 0 venit din activitate economică 2 ani la rând.", "src": "📄 ONG17"}], "request": ["Cel puțin un contract comercial semnat", "Defalcarea celor 4,0 mln lei (granturi vs vânzări)"], "read": ["Situația Financiară 2025 (ONG17, Anexa 2 — rd.070 și rd.010)", "cerere — afirmația despre venituri proprii 1,2 mln"], "recon_in": true, "recon_change": "stays"}, {"id": "hodina", "name": "Hodina (SRL «Bureau of ERM»)", "lot": 3, "city": "Cimișlia", "status": "should_have_passed", "business": 72, "bclass": "🟡", "social": 48, "szone": "🟣", "quadrant": "II", "tags": ["should_have_passed"], "idea": "Platformă digitală de turism care conectează turiștii cu prestatori locali de experiențe rurale.", "verdict": "Afacere reală și profitabilă, dar previziunea se sprijină pe o «fermă» a cărei existență nu e dovedită, iar misiunea e subțire.", "strengths": [{"text": "Profit net 2025 = 628 222 lei confirmat oficial (marjă ~76%).", "src": "📄 Situații financiare 2025"}, {"text": "Platforma hodina.md există, cu listinguri active.", "src": "🌐 hodina.md", "url": "https://hodina.md/"}], "weaknesses": [{"text": "87% din previziunea de venit vine dintr-o «vizită la fermă (cai, ovine)», nu din platformă — contrazice modelul digital.", "src": "📄 plan"}, {"text": "Nu e dovedit că ferma aparține solicitantului; fondatorul e specialist de marketing din Chișinău.", "src": "📄 CV / web"}, {"text": "Impact declarat (75 femei/150 beneficiari) e o țintă, nu un rezultat.", "src": "📄 cerere"}], "claims": [{"claim": "Afacere digitală, independentă de locație.", "reality": "87% din venitul prognozat vine de la o fermă fizică, offline, neconfirmată.", "src": "📄 plan"}], "request": ["Dovada existenței și proprietății fermei", "Separarea venitului platformă vs fermă"], "read": ["Situații financiare 2025 — profit net (rd.180)", "plan — previziunea de venituri (produsul «vizită la fermă»)"], "recon_in": true, "recon_change": "new"}, {"id": "filoteea", "name": "Filoteea Academy", "lot": 1, "city": "Orhei", "status": "should_have_passed", "business": 64, "bclass": "🟡", "social": 58, "szone": "🟣", "quadrant": "II (limită)", "tags": ["should_have_passed"], "idea": "Centru psiho-educațional (afterschool, logopedie, suport) pentru copii; plătesc părinții, cu locuri subvenționate pentru vulnerabili.", "verdict": "Centru cu experiență reală (2 ani pe patentă) și cerere validă, dar cu o eroare care dublează profitul și co-finanțare nedovedită.", "strengths": [{"text": "Istoric real: 2 ani de activitate pe patentă (test de piață); parteneriat cu un liceu.", "src": "📄 Fisa / plan / scrisoare de susținere"}, {"text": "Cerere reală: concurent privat plătitor (Extra Kids) + alternativă publică gratuită (SAP Orhei).", "src": "🌐 extra-kids.md", "url": "https://extra-kids.md/"}], "weaknesses": [{"text": "Eroare de P&L: profitul anului 1 e dublat (902 653 declarat vs ~438 000 pe suma trimestrelor).", "src": "📄 plan Tab.29-31"}, {"text": "Co-finanțarea de 59% e pe jumătate cheltuieli operaționale (chirie), fără dovadă bănească; câmpul din cerere e gol.", "src": "📄 buget / cerere"}, {"text": "Mecanismul locurilor sociale (30%) depinde de granturi/donații, nu de venituri.", "src": "📄 plan"}], "claims": [{"claim": "Profit net an 1 = 902 653 lei.", "reality": "Suma trimestrelor dă ~438 000 lei; cifra din P&L e dublată (eroare).", "src": "📄 plan Tab.29-31"}], "request": ["Declarațiile de patentă 2023–2025", "P&L corectat", "Dovada co-finanțării monetare"], "read": ["plan — Tab.29 (venituri) vs Tab.31 (P&L)", "buget — structura co-finanțării"], "recon_in": true, "recon_change": "new", "fund_fit": "consider", "fit_why": "Istoric real (2 ani pe patentă, test de piață) și cerere validă, cu concurent privat plătitor.", "fit_cond": "De corectat eroarea de P&L (profit dublat) și de dovedit co-finanțarea monetară.", "fit_conditional": false}, {"id": "eco2go", "name": "Eco 2 Go SRL — «Mam’s Gelato»", "lot": 3, "city": "Chișinău", "status": "should_have_passed", "business": 68, "bclass": "🟡", "social": 40, "szone": "⚪", "quadrant": "II", "tags": ["should_have_passed"], "idea": "Producție de înghețată artizanală; extindere cu o linie fără zahăr și angajarea a 2–3 femei vulnerabile.", "verdict": "Cea mai profitabilă afacere din tot lotul, dar impactul e cosmetic și deadweight-ul ridicat — afacere excelentă, întreprindere socială slabă.", "strengths": [{"text": "Cea mai puternică afacere pe cifre: venit 2 196 994 lei, profit net 914 171 lei (confirmat oficial, marjă brută ~61%).", "src": "📄 Situație financiară 2025 (SNC)"}, {"text": "Canale reale: retail (Linella, Nr1) + HoReCa + B2C.", "src": "📄 plan"}], "weaknesses": [{"text": "Impact cosmetic: momentan 0 angajați vulnerabili; angajarea celor 2–3 femei e o intenție.", "src": "📄 plan / Fisa"}, {"text": "Deadweight mare: cu profit de 914k, firma ar putea finanța singură echipamentul de 20k EUR.", "src": "📄 analiză"}, {"text": "Linia fără zahăr nu se autofinanțează — e subvenționată de nucleul comercial.", "src": "📄 plan"}], "claims": [{"claim": "Întreprindere socială cu angajarea vulnerabililor.", "reality": "Nu are angajați vulnerabili în prezent; e o afacere comercială puternică cu componentă socială adăugată.", "src": "📄 Fisa / plan"}], "request": ["Plan concret de angajare a persoanelor vulnerabile", "Justificarea grantului față de deadweight"], "read": ["Situație financiară 2025 — profit net", "Fisa — angajați din categorii defavorizate (câmp)"], "recon_in": false, "recon_change": "none"}, {"id": "alga", "name": "AO «ALGA» — clinica «AlgaVet»", "lot": 1, "city": "Ungheni", "status": "should_have_passed", "business": 55, "bclass": "🟠", "social": 55, "szone": "🟣", "quadrant": "IV (limită)", "tags": ["should_have_passed"], "idea": "Clinică veterinară socială (sterilizări, prevenție), tarife reduse și gratuități pentru animale fără stăpân/familii vulnerabile.", "verdict": "Nișă reală și misiune bună, dar dosarul nu susține teza «afacere funcțională»: lipsesc raportul financiar și diploma medicului.", "strengths": [{"text": "Nișă reală, concurență redusă în zonă; marjă bună pe servicii (~70%).", "src": "📄 plan"}, {"text": "Fondator medic veterinar cu 8 ani de experiență (cabinet anterior Lazăr Vet).", "src": "📄 plan"}], "weaknesses": [{"text": "Nicio situație financiară 2025 (promisă «în 1 săptămână», neatașată) — totul e previziune.", "src": "📄 Fisa / plan"}, {"text": "CV-ul și diploma medicului NU sunt în dosar — atașat e doar CV-ul unei coordonatoare (filolog).", "src": "📄 CV"}, {"text": "Previziunea anului 1 (630 operații pe 1 medic) e la limita capacității fizice; tabele cu erori.", "src": "📄 plan"}, {"text": "Co-finanțare 2 000 EUR fără dovadă bănească.", "src": "📄 buget"}], "claims": [{"claim": "Clinică funcțională cu >10 clienți/zi.", "reality": "Nicio cifră de venit reală în dosar; totul e afirmație/previziune.", "src": "📄 Fisa / plan"}], "request": ["Situația financiară 2025", "CV + diploma medicului veterinar", "Dovada co-finanțării"], "read": ["Fisa — câmpul profit/pierdere 2025", "plan — echipa (cine e medicul) și previziunea de venit"], "recon_in": true, "recon_change": "new"}, {"id": "bun_comun", "name": "AO «Comunități Reziliente» — «Bun Comun»", "lot": 1, "city": "Ungheni", "status": "should_have_passed", "business": 62, "bclass": "🟡", "social": 58, "szone": "🟣", "quadrant": "IV (limită)", "tags": ["should_have_passed"], "idea": "Ceaiuri din plante «de la câmp la raft», cu implicarea femeilor din mediul rural.", "verdict": "Bază tehnică reală (competență HACCP, spațiu gratuit) și preț realist, dar fără precomenzi și cu o echipă dependentă de o singură persoană.", "strengths": [{"text": "Competență reală de producție alimentară + HACCP (fondatoarea) și spațiu gratuit pe 5 ani (Apiprodex).", "src": "📄 CV / plan"}, {"text": "Preț realist (70 lei/50g) în coridorul pieței locale (concurent EcoPlanTea ~55 lei).", "src": "🌐 cha-dao.md", "url": "https://cha-dao.md/"}], "weaknesses": [{"text": "«20+ puncte de vânzare» e o țintă, nu cerere confirmată — nicio scrisoare de intenție.", "src": "📄 cerere"}, {"text": "Salariile coordonatorilor sunt in-kind; salariile femeilor depind de un venit neconfirmat (P&L pe pierdere în T1).", "src": "📄 buget / plan"}, {"text": "Echipă dependentă de o singură persoană-cheie (celelalte CV-uri sunt slabe; unul are ~15 ani).", "src": "📄 CV"}], "claims": [{"claim": "Rețea de 20+ puncte de vânzare.", "reality": "E un obiectiv de proiect; niciun magazin contractat.", "src": "📄 cerere"}], "request": ["Scrisori de intenție de la puncte de vânzare", "Sursa salariilor femeilor până la profit", "Al doilea specialist-cheie"], "read": ["cerere — Activitatea 5.2 (puncte de vânzare)", "buget — natura co-finanțării (in-kind)"], "recon_in": true, "recon_change": "new", "fund_fit": "consider", "fit_why": "Bază tehnică reală (competență HACCP, spațiu gratuit pe 5 ani) și preț realist de piață.", "fit_cond": "De adus scrisori de intenție (cerere confirmată) și un al doilea specialist-cheie.", "fit_conditional": false}, {"id": "atelier_eva", "name": "AO «Centrul Regional pentru Femei EVA» — «Atelier EVA»", "lot": 1, "city": "Căușeni", "status": "should_have_passed", "business": 63, "bclass": "🟡", "social": 70, "szone": "🔵", "quadrant": "I (limită)", "tags": ["should_have_passed"], "idea": "Atelier de croitorie (textile pentru casă + produse personalizate) care creează locuri de muncă pentru femei din medii vulnerabile.", "verdict": "Cea mai echilibrată dintre «cele care meritau» — WISE autentic cu bază reală, dar cu prag de rentabilitate subestimat și fără expertiză de producție.", "strengths": [{"text": "Misiune WISE integrată și reală: 2 ani de lucru cu femei vulnerabile; parteneriate cu Agenția de Ocupare și Școala Profesională.", "src": "📄 cerere / scrisori de susținere"}, {"text": "Documente coerente (curs valutar, buget, prognoze se potrivesc); investiție de capital justificată.", "src": "📄 buget / prognoze"}], "weaknesses": [{"text": "Pragul de rentabilitate subestimat de ~2× (declarat ~89k lei/lună, real ~160k); decalaj capacitate–volum de ~2×.", "src": "📄 prognoze / plan"}, {"text": "Fără expertiză de producție textilă în echipă (fondatoarea e economist/bancher) și fără maistru-tehnolog numit.", "src": "📄 CV"}, {"text": "Fără contracte B2B ferme (uniforme/sacoșe declarate, dar neconfirmate).", "src": "📄 cerere"}], "claims": [{"claim": "Prag de rentabilitate ~89 000 lei/lună.", "reality": "Cu structura proprie de costuri, pragul real e ~160 000 lei/lună (dublu).", "src": "📄 prognoze / plan"}], "request": ["Prag de rentabilitate recalculat onest", "Maistru-tehnolog / expertiză de producție", "1–2 scrisori de intenție B2B"], "read": ["Prognoze financiare — pragul de rentabilitate", "plan — capacitatea de producție vs volumul de venit"], "recon_in": true, "recon_change": "new", "fund_fit": "favorite", "fit_why": "WISE autentic pentru femei vulnerabile, 2 ani de experiență, documente coerente și investiție de capital justificată — și nici măcar nu a fost în semifinală.", "fit_cond": "De condiționat: prag de rentabilitate recalculat onest și un maistru-tehnolog în echipă.", "fit_conditional": false}], "excluded": [{"n": "Briunet English (EnglishBoom)", "lot": 3, "s": 58, "r": "Afacere reală (profit 47k), dar buget umflat ×6–30 și previziune ×4,8; al 5-lea grant."}, {"n": "RoboClub SRL", "lot": 3, "s": 58, "r": "Robotică-as-a-service; pe pierdere în 2024, dosar contradictoriu, fără raport oficial."}, {"n": "Pădurea Noastră", "lot": 1, "s": 59, "r": "Apicultură; produs real, dar 0 co-finanțare, 100% start pe grant, 30–50% dăruit."}, {"n": "ART CONNECT", "lot": 1, "s": 57, "r": "Educație artistică; prag de rentabilitate abia în anul 3, co-finanțare 15%."}, {"n": "Sănătate fără Frontiere", "lot": 1, "s": 52, "r": "Platformă de îngrijire la domiciliu; an 1 pe pierdere, confuzie de entități."}, {"n": "Progressio (Mama Hub)", "lot": 1, "s": 51, "r": "Îngrijire+cafenea pentru mame; an 1 pe pierdere, co-finanțare ~2,5%."}, {"n": "Stupina cu Povești", "lot": 2, "s": 49, "r": "Apiterapie; pierdere operațională, «profitul» e venit financiar unic."}, {"n": "LAOLALTĂ", "lot": 1, "s": 46, "r": "ONG matur; activitate economică 0,55% din buget, pe pierdere; nu e «nou»."}, {"n": "River Kayak (joc de societate)", "lot": 3, "s": 42, "r": "Neeligibil (2023, fără activitate economică); 3 versiuni de grant."}, {"n": "Atelier MIMI", "lot": 1, "s": 42, "r": "Suveniruri (dizabilitate); pierdere toți cei 3 ani după propria previziune."}, {"n": "ProDezVolt", "lot": 3, "s": 37, "r": "Media anti-fraudă; raport financiar al altei firme (Brihunet); pe pierdere."}, {"n": "ANTCARA", "lot": 3, "s": 35, "r": "Hotel start-up (Soroca); 0 venit, ~90% finanțare externă."}, {"n": "Prieteni Dragi", "lot": 2, "s": 34, "r": "Hotel pentru animale; capital negativ, previziune ×12."}, {"n": "Larina Consult", "lot": 3, "s": 31, "r": "Identitate amestecată (finanțe «Ghidușii» + plan «Hodina»)."}, {"n": "Prolenstas", "lot": 1, "s": 28, "r": "Atelier+masaj; pierdere chiar cu grant, 0 co-finanțare."}, {"n": "Denollgrup", "lot": 2, "s": 24, "r": "Închiriere ATV; venit 1500 lei, previziune ×255, 0 co-finanțare."}, {"n": "AO CDDIC", "lot": 1, "s": 19, "r": "«Servicii de atragere de granturi»; plan amestecat; fără model financiar."}, {"n": "Drone Sociale", "lot": 1, "s": 19, "r": "Grant pentru drone; previziuni goale; conflict de interese."}, {"n": "Biolactis", "lot": 2, "s": 17, "r": "Brânzeturi; venit ~1000 EUR, 6+ granturi anterioare, model financiar gol."}]};
+const ONEDRIVE = "https://eefmoldova-my.sharepoint.com/personal/ana_ciurac_eef_md/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fana%5Fciurac%5Feef%5Fmd%2FDocuments%2FImpact%20Space%2FShared%20documents%20IS%2FConcurs%20de%20granturi&ga=1";
+
+const IC = {
+  check:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>',
+  x:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>',
+  ext:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>',
+  file:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>',
+  minus:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/></svg>',
+  plus:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>',
+  scale:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 21h14M6 8l-3 6h6zM18 8l-3 6h6zM6 8l6-2 6 2"/></svg>',
+  book:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v16a1 1 0 0 0 1 1h14V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2z"/><path d="M8 7h8M8 11h6"/></svg>',
+  send:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>',
+  warn:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>',
+  sun:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2M12 20.5v2M4 4l1.5 1.5M18.5 18.5L20 20M1.5 12h2M20.5 12h2M4 20l1.5-1.5M18.5 5.5L20 4"/></svg>',
+  moon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>'
+};
+const INS = [
+  {ic:'🎨',c:'var(--amber)',h:'Scor mare ≠ 🟢 „verde"',p:'Scorul (0–100) e potențialul; culoarea (🟢/🟡/🟠) e încrederea după verificare. Niciun aplicant nu rămâne 🟢 verde — afacere viabilă fără rezerve (rapoarte oficiale, co-finanțare în bani, zero semnale de integritate). Cei mai puternici sunt 🟡 galben: solizi, dar fiecare cu o rezervă de închis. Un scor de 70–80 nu înseamnă verde.'},
+  {ic:'📂',c:'var(--warn)',h:'Data room contaminat',p:'Documente amestecate între dosare: la Robospace — raportul altei firme (Brihunet); la Social Eco — planul AlgaVet. De clarificat la nivelul administrării dosarelor.'},
+  {ic:'⚖️',c:'var(--soc)',h:'Afacere schimbată pe misiune',p:'Selecția a scos afaceri solide (Eco 2 Go, Hodina) și a lăsat să treacă proiecte dependente de grant, dar cu misiune puternică (Mama Cafe, Brio).'},
+  {ic:'★',c:'var(--q1)',h:'Colțul-țintă aproape gol',p:'Cadranul I (afacere reală + misiune profundă) e cvasi-gol: practic doar Filantropia și, la limită, Robospace / CASMED / Atelier EVA.'},
+  {ic:'⚠️',c:'var(--warn)',h:'Cazul cel mai problematic',p:'IQ Games (22): zero venit comercial doi ani la rând în rapoartele oficiale, deși cererea afirmă „peste 1,2 mln lei venituri proprii".'}
+];
+const STATUS_RO={semifinalist:'Semifinalist',should_have_passed:'Merita semifinala'};
+const TAG_RO={problematic:'Semnal de integritate',passed_but_weak:'Slab, dar a trecut',should_have_passed:'Merita semifinala'};
+const QNAME={I:'afacere + misiune',II:'afacere / CSR',III:'misiune fără afacere',IV:'slab pe ambele'};
+function quadNum(q){const m=(q||'').trim().match(/^(IV|III|II|I)/);return m?m[1]:'IV';}
+function quadColor(q){return getComputedStyle(document.documentElement).getPropertyValue({I:'--q1',II:'--q2',III:'--q3',IV:'--q4'}[quadNum(q)]).trim();}
+function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function srcLink(src,url){
+  const web=src&&src.indexOf('🌐')===0;
+  if(web&&url)return `<a class="src web" href="${esc(url)}" target="_blank" rel="noopener">${IC.ext} ${esc(src)}</a>`;
+  if(web)return `<span class="src web">${esc(src)}</span>`;
+  return `<a class="src" href="${ONEDRIVE}" target="_blank" rel="noopener" title="Deschide folderul concursului (OneDrive)">${IC.file} ${esc(src)}</a>`;
+}
+
+/* ---------- HERO ---------- */
+document.getElementById('lead').textContent=DATA.meta.subtitle;
+const nSemi=DATA.applicants.filter(a=>a.status==='semifinalist').length;
+const nShould=DATA.applicants.filter(a=>a.status==='should_have_passed').length;
+[[nSemi,'semifinaliști analizați'],[nShould,'meritau semifinala'],[DATA.excluded.length,'corect eliminați'],['2','axe · 4 cadrane']]
+ .forEach(()=>{});
+document.getElementById('stats').innerHTML=[[nSemi,'semifinaliști analizați'],[nShould,'meritau semifinala'],[DATA.excluded.length,'corect eliminați'],['2','axe · 4 cadrane']].map(s=>`<div class="stat"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('');
+document.getElementById('disc').innerHTML=IC.warn+'<div>'+esc(DATA.meta.methodology.disclaimer)+'</div>';
+document.getElementById('insights').innerHTML=INS.map(i=>`<div class="insight"><div class="ic" style="color:${i.c}">${i.ic}</div><h4>${i.h}</h4><p>${i.p}</p></div>`).join('');
+
+/* ---------- POTENȚIAL REAL ---------- */
+(function(){
+  const cw='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>';
+  const card=a=>{const col=quadColor(a.quadrant);const t1=a.fund_fit==='favorite';
+    return `<div class="favcard ${t1?'t1':''}" data-id="${a.id}">
+      <div class="fh"><div><h4>${esc(a.name)}</h4><div class="fmeta">Lot ${a.lot} · ${esc(a.city)} · ${STATUS_RO[a.status]||''}</div></div>
+        <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
+          ${t1?`<span class="favbadge" style="background:color-mix(in srgb,var(--q1) 16%,transparent);color:var(--q1)">★ Favorit</span>`:`<span class="favbadge" style="background:var(--panel-2);color:var(--txt-dim);border:0.5px solid var(--stroke)">De luat în calcul</span>`}
+          ${a.fit_conditional?`<span class="favbadge" style="background:color-mix(in srgb,var(--amber) 15%,transparent);color:var(--amber)">condiționat</span>`:''}
+        </div></div>
+      <div class="favsc"><span style="color:var(--biz)">Afacere <b>${a.business}</b> ${a.bclass}</span><span style="color:var(--soc)">Social <b>${a.social}</b> ${a.szone}</span><span style="color:${col}">Cadran ${esc(a.quadrant)}</span></div>
+      <div class="why">${esc(a.fit_why)}</div>
+      ${a.fit_cond?`<div class="cond"><span class="ic">${cw}</span><span>${esc(a.fit_cond)}</span></div>`:''}
+    </div>`;};
+  const t1=DATA.applicants.filter(a=>a.fund_fit==='favorite').sort((a,b)=>b.business-a.business);
+  const t2=DATA.applicants.filter(a=>a.fund_fit==='consider').sort((a,b)=>b.business-a.business);
+  document.getElementById('fav-t1').innerHTML=`<div class="fav-lbl"><span>★ Favoriți clari (${t1.length})</span><span class="ln"></span></div><div class="fav-grid">${t1.map(card).join('')}</div>`;
+  document.getElementById('fav-t2').innerHTML=`<div class="fav-lbl"><span>De luat în calcul, cu condiții (${t2.length})</span><span class="ln"></span></div><div class="fav-grid">${t2.map(card).join('')}</div>`;
+  document.getElementById('fav-ex').innerHTML=`<div class="exwrap"><h3><span style="color:var(--amber)">${cw}</span> De ce lipsesc unii cu scor mare — onest</h3>
+    <div class="exgroup"><div class="et">Adiționalitate zero (deadweight)</div><div class="en">CASMED, Eco 2 Go și Vila Dorului — afaceri solide, profitabile, care își pot cumpăra singure echipamentul cerut. Grantul nu schimbă nimic; investiția Fondului trebuie să conteze.</div></div>
+    <div class="exgroup"><div class="et">Semnale de integritate</div><div class="en">Eco-Village (profit 2024 în două cifre oficiale incompatibile plus afiliere SRL/ONG), IQ Games (0 venit comercial 2 ani), Caroma Nord și Social Eco (denaturări, dosar amestecat).</div></div>
+    <div class="exgroup"><div class="et">Impact fără afacere</div><div class="en">Mama Cafe, Brio, Casa Culorilor — misiune reală, dar modelul nu se autosusține (prețuri necalculate / pierdere chiar și cu subvenție). Proiecte sociale, nu (încă) întreprinderi sociale.</div></div></div>`;
+  document.querySelectorAll('.favcard[data-id]').forEach(el=>el.onclick=()=>openModal(el.dataset.id));
+})();
+
+/* ---------- SIGNALS ---------- */
+const RX_CONTAM=/aparține|AlgaVet|BRIHUNET|Brihunet|amestec|altui|altei firme|Ghidușii|conține/i;
+function contamNote(a){
+  const pool=[...(a.weaknesses||[]),...(a.claims||[]).map(c=>({text:c.reality}))];
+  const hit=pool.find(w=>RX_CONTAM.test(w.text));
+  return hit?hit.text.replace(/^⚠\s*/,''):null;
+}
+const contam=DATA.applicants.filter(a=>contamNote(a)).map(a=>({id:a.id,name:a.name,note:contamNote(a),ex:false}))
+  .concat(DATA.excluded.filter(x=>RX_CONTAM.test(x.r)).map(x=>({id:null,name:x.n,note:x.r,ex:true})));
+const integ=DATA.applicants.filter(a=>(a.tags||[]).includes('problematic'))
+  .sort((a,b)=>a.business-b.business)
+  .map(a=>({id:a.id,name:a.name,note:(a.claims&&a.claims[0]?a.claims[0].reality:a.verdict)}));
+document.getElementById('sig-contam').innerHTML=contam.map(c=>
+  `<div class="sig-item" ${c.id?`data-open="${c.id}"`:''}><span class="dot" style="background:var(--warn)"></span><div><div class="nm">${esc(c.name)}${c.ex?' <span style="color:var(--txt-mut);font-weight:400">(eliminat)</span>':''}</div><div class="tx">${esc(c.note)}</div></div></div>`).join('');
+document.getElementById('sig-integ').innerHTML=integ.map(c=>
+  `<div class="sig-item" data-open="${c.id}"><span class="dot" style="background:var(--amber)"></span><div><div class="nm">${esc(c.name)}</div><div class="tx">${esc(c.note)}</div></div></div>`).join('');
+document.querySelectorAll('.sig-item[data-open]').forEach(el=>el.onclick=()=>openModal(el.dataset.open));
+
+/* ---------- METODOLOGIE ---------- */
+const critList=[['Autofinanțare',25],['Economia unității',20],['Client/piață RM',15],['Scalabilitate',12],['Impact',12],['Echipă',10],['Realism',6]];
+const spectrum=[['CSR','var(--q2)'],['Afacere responsabilă','var(--teal)'],['Întreprindere socială','var(--soc)'],['Proiect social','var(--q3)']];
+document.getElementById('axes').innerHTML=`
+  <div class="axis-card biz"><div class="tag">◧ Axa de afacere · 0–100</div><div class="bar"></div>
+    <p>Cât de autosustenabilă e afacerea. Filtru dur pe autofinanțare: dacă modelul nu iese pe zero operațional fără granturi în 2–3 ani, scorul scade.</p>
+    <div class="crit">${critList.map(c=>`<span class="c">${c[0]} <b>${c[1]}</b></span>`).join('')}</div><div class="clr-note">Culoare (încredere după verificare): <b>🟢</b> viabilă, fără rezerve · <b>🟡</b> solidă, cu o rezervă · <b>🟠</b> fragilă. După verificare, niciun aplicant nu e 🟢.</div></div>
+  <div class="axis-card soc"><div class="tag">◨ Axa socială · 0–100</div><div class="bar"></div>
+    <p>Cât de autentică e misiunea — centralitatea, adiționalitatea, mecanismul integrat, mission-lock, onestitatea. Legea 223/2017 e context, nu factor principal.</p>
+    <div class="spectrum">${spectrum.map(s=>`<span class="s" style="background:color-mix(in srgb,${s[1]} 14%,transparent);border:1px solid color-mix(in srgb,${s[1]} 45%,transparent);color:${s[1]}">${s[0]}</span>`).join('')}</div><div class="clr-note"><b>🔵</b> misiune profundă (întreprindere/proiect social) · <b>🟣</b> afacere cu impact · <b>⚪</b> impact cosmetic.</div></div>`;
+const Q=DATA.meta.methodology.quadrants,qmeta={I:['q1','I'],II:['q2','II'],III:['q3','III'],IV:['q4','IV']};
+document.getElementById('quads').innerHTML=['I','II','III','IV'].map(k=>{const[cls,rn]=qmeta[k];
+  return `<div class="quad ${cls}"><h4><span class="rn">${rn}</span> ${esc(Q[k].split('—')[0])}</h4><p>${esc(Q[k].split('—').slice(1).join('—').trim())}</p></div>`;}).join('');
+
+/* ---------- MATRICE ---------- */
+const SVG='http://www.w3.org/2000/svg';
+const M={w:760,h:570,l:62,r:34,t:34,b:74},plotW=M.w-M.l-M.r,plotH=M.h-M.t-M.b;
+const px=v=>M.l+v/100*plotW, py=v=>M.t+(100-v)/100*plotH;
+function buildMatrix(){
+  const svg=document.getElementById('matrix');svg.innerHTML='';
+  const gx=px(60),gy=py(60);
+  const gl=cssv('--grid-line'),al=cssv('--axis-line'),tk=cssv('--tick'),tz=cssv('--target-zone');
+  const add=(t,at)=>{const e=document.createElementNS(SVG,t);for(const k in at)e.setAttribute(k,at[k]);svg.appendChild(e);return e;};
+  add('rect',{x:M.l,y:M.t,width:plotW,height:plotH,rx:10,fill:cssv('--plot-bg')});
+  add('rect',{x:gx,y:M.t,width:px(100)-gx,height:gy-M.t,fill:tz});
+  add('line',{x1:gx,y1:M.t,x2:gx,y2:M.t+plotH,stroke:gl,'stroke-dasharray':'4 5'});
+  add('line',{x1:M.l,y1:gy,x2:M.l+plotW,y2:gy,stroke:gl,'stroke-dasharray':'4 5'});
+  add('line',{x1:M.l,y1:M.t,x2:M.l,y2:M.t+plotH,stroke:al});
+  add('line',{x1:M.l,y1:M.t+plotH,x2:M.l+plotW,y2:M.t+plotH,stroke:al});
+  [0,60,100].forEach(v=>{
+    let t1=add('text',{x:px(v),y:M.t+plotH+22,'text-anchor':'middle',fill:tk,'font-size':'11','font-family':'Space Grotesk'});t1.textContent=v;
+    let t2=add('text',{x:M.l-12,y:py(v)+4,'text-anchor':'end',fill:tk,'font-size':'11','font-family':'Space Grotesk'});t2.textContent=v;});
+  const qt=(x,y,txt,col)=>{const e=add('text',{x,y,fill:col,'font-size':'12','font-family':'Space Grotesk','font-weight':'600',opacity:.82});e.textContent=txt;};
+  qt(px(79),M.t+16,'★ I · afacere + misiune',cssv('--q1'));
+  qt(px(79),gy+18,'II · afacere / CSR',cssv('--q2'));
+  qt(M.l+8,M.t+16,'III · misiune fără afacere',cssv('--q3'));
+  qt(M.l+8,gy+18,'IV · slab pe ambele',cssv('--q4'));
+  let xl=add('text',{x:M.l+plotW/2,y:M.h-14,'text-anchor':'middle',fill:cssv('--txt-dim'),'font-size':'12.5','font-family':'Space Grotesk'});xl.textContent='Viabilitate de afacere →';
+  let yl=add('text',{x:-(M.t+plotH/2),y:16,'text-anchor':'middle',fill:cssv('--txt-dim'),'font-size':'12.5','font-family':'Space Grotesk',transform:'rotate(-90)'});yl.textContent='Profunzime socială →';
+  const tip=document.getElementById('mtip');
+  DATA.applicants.forEach(a=>{
+    const col=quadColor(a.quadrant),isSemi=a.status==='semifinalist';
+    if(!isSemi){add('circle',{cx:px(a.business),cy:py(a.social),r:10,fill:'none',stroke:col,'stroke-width':2.6,'stroke-dasharray':'3 3',opacity:.96,'data-ring':a.id});add('circle',{cx:px(a.business),cy:py(a.social),r:2.6,fill:col,opacity:.96,'data-ring':a.id});}
+    const c=add('circle',{cx:px(a.business),cy:py(a.social),r:isSemi?10:9,fill:isSemi?col:'transparent',stroke:isSemi?'rgba(255,255,255,.92)':'transparent','stroke-width':isSemi?1.4:0,opacity:1,class:'pt','data-id':a.id,style:'color:'+col});
+    c.addEventListener('click',()=>openModal(a.id));
+    const move=ev=>{const e=ev.touches?ev.touches[0]:ev;tip.style.left=Math.min(e.clientX+14,innerWidth-260)+'px';tip.style.top=(e.clientY+14)+'px';};
+    c.addEventListener('mousemove',move);
+    c.addEventListener('mouseenter',ev=>{c.setAttribute('r',isSemi?13:11);
+      tip.innerHTML=`<b>${esc(a.name)}</b><div class="sc"><span>Afacere <i>${a.business}</i></span><span>Social <i>${a.social}</i></span><span>Cadran <i>${esc(quadNum(a.quadrant))}</i></span></div>`;
+      tip.style.opacity=1;move(ev);});
+    c.addEventListener('mouseleave',()=>{c.setAttribute('r',isSemi?10:9);tip.style.opacity=0;});
+  });
+  document.getElementById('mlegend').innerHTML=
+    ['I','II','III','IV'].map(k=>`<span class="lg"><span class="sw" style="background:${cssv({I:'--q1',II:'--q2',III:'--q3',IV:'--q4'}[k])}"></span>Cadran ${k}</span>`).join('')
+    +`<span class="lg"><svg class="shp" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="${cssv('--txt-mut')}"/></svg>Semifinalist</span>`
+    +`<span class="lg"><svg class="shp" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="none" stroke="${cssv('--txt-mut')}" stroke-width="2" stroke-dasharray="3 2.5"/></svg>Merita semifinala</span>`;
+}
+function highlightMatrix(ids){
+  const set=ids?new Set(ids):null;
+  document.querySelectorAll('#matrix .pt').forEach(c=>c.style.opacity=(!set||set.has(c.getAttribute('data-id')))?0.96:0.1);
+  document.querySelectorAll('#matrix [data-ring]').forEach(c=>c.style.opacity=(!set||set.has(c.getAttribute('data-ring')))?0.9:0.07);
+}
+
+/* ---------- STATE / FILTERS ---------- */
+const FILTERS=[
+  ['all','Toate',a=>true],
+  ['favorite','Potențial real',a=>!!a.fund_fit],
+  ['should_have_passed','Meritau semifinala',a=>a.status==='should_have_passed'||(a.tags||[]).includes('should_have_passed')],
+  ['passed_but_weak','Au trecut, dar slabi',a=>(a.tags||[]).includes('passed_but_weak')],
+  ['reconstructed','Semifinală reconstruită',a=>a.recon_in],
+  ['problematic','Cele mai problematice',a=>(a.tags||[]).includes('problematic')]
+];
+let state={filter:'all',lot:0,quad:null,sort:'business',q:''};
+function viewFn(){return (FILTERS.find(f=>f[0]===state.filter)||FILTERS[0])[2];}
+function passLotQ(a){return (state.lot===0||a.lot===state.lot)&&(!state.quad||quadNum(a.quadrant)===state.quad)&&(!state.q||(a.name+a.city+a.idea).toLowerCase().includes(state.q));}
+function baseSet(){return DATA.applicants.filter(viewFn()).filter(a=>(state.lot===0||a.lot===state.lot)&&(!state.q||(a.name+a.city+a.idea).toLowerCase().includes(state.q)));}
+function currentSet(){return DATA.applicants.filter(viewFn()).filter(passLotQ);}
+
+function renderFilters(){
+  const q=state.q,lot=state.lot,quad=state.quad;
+  const cnt={};FILTERS.forEach(f=>{cnt[f[0]]=DATA.applicants.filter(f[2]).filter(a=>(lot===0||a.lot===lot)&&(!quad||quadNum(a.quadrant)===quad)&&(!q||(a.name+a.city+a.idea).toLowerCase().includes(q))).length;});
+  document.getElementById('filters').innerHTML=FILTERS.map(f=>`<button class="fbtn ${state.filter===f[0]?'on':''}" data-f="${f[0]}">${esc(f[1])} <span class="n">${cnt[f[0]]}</span></button>`).join('');
+  document.querySelectorAll('.fbtn').forEach(b=>b.onclick=()=>{state.filter=b.dataset.f;render();});
+}
+function renderLots(){
+  const box=document.getElementById('lotchips');
+  const lots=[0,1,2,3];
+  box.innerHTML='<span class="lbl">Lot</span>'+lots.map(l=>`<button class="lchip ${state.lot===l?'on':''}" data-l="${l}">${l===0?'Toate':l}</button>`).join('');
+  box.querySelectorAll('.lchip').forEach(b=>b.onclick=()=>{state.lot=+b.dataset.l;render();});
+}
+function renderDash(){
+  const set=baseSet();
+  const qc={I:0,II:0,III:0,IV:0};set.forEach(a=>qc[quadNum(a.quadrant)]++);
+  const flags=set.filter(a=>(a.tags||[]).includes('problematic')).length;
+  const total=set.length||1;
+  const cards=['I','II','III','IV'].map(k=>{
+    const col=cssv({I:'--q1',II:'--q2',III:'--q3',IV:'--q4'}[k]);
+    return `<div class="dcard ${state.quad===k?'on':''}" style="--dc:${col}" data-quad="${k}"><div class="n">${qc[k]}</div><div class="l">Cadran ${k} · ${QNAME[k]}</div><div class="bar" style="width:${qc[k]/total*100}%"></div></div>`;
+  }).join('');
+  const flagCard=`<div class="dcard ${state.filter==='problematic'?'on':''}" style="--dc:var(--warn)" data-flag="1"><div class="n">${flags}</div><div class="l">Semnale de integritate</div><div class="bar" style="width:${flags/total*100}%"></div></div>`;
+  document.getElementById('dash').innerHTML=cards+flagCard;
+  document.querySelectorAll('.dcard[data-quad]').forEach(d=>d.onclick=()=>{state.quad=state.quad===d.dataset.quad?null:d.dataset.quad;render();});
+  document.querySelector('.dcard[data-flag]').onclick=()=>{state.filter=state.filter==='problematic'?'all':'problematic';render();};
+}
+function sortApps(list){
+  const s=state.sort,arr=[...list];
+  if(s==='business')arr.sort((a,b)=>b.business-a.business);
+  else if(s==='social')arr.sort((a,b)=>b.social-a.social);
+  else if(s==='lot')arr.sort((a,b)=>a.lot-b.lot||b.business-a.business);
+  else if(s==='name')arr.sort((a,b)=>a.name.localeCompare(b.name,'ro'));
+  return arr;
+}
+function cardHTML(a){
+  const col=quadColor(a.quadrant),pills=[];
+  (a.tags||[]).forEach(t=>{if(TAG_RO[t]&&t!=='should_have_passed')pills.push(`<span class="pill p-${t}">${esc(TAG_RO[t])}</span>`);});
+  if(a.status==='should_have_passed')pills.push(`<span class="pill p-should_have_passed">Merita semifinala</span>`);
+  if(a.fund_fit)pills.push(`<span class="pill" style="color:var(--q1);border-color:color-mix(in srgb,var(--q1) 40%,transparent);background:color-mix(in srgb,var(--q1) 9%,transparent)">★ Potențial real</span>`);
+  if(state.filter==='reconstructed'&&a.recon_change==='new')pills.push(`<span class="pill p-recon">${IC.plus} Nou în semifinală</span>`);
+  return `<div class="card" style="--qc:${col}" data-id="${a.id}">
+    <div class="top"><div><h3>${esc(a.name)}</h3><div class="meta">Lot ${a.lot} · ${esc(a.city)} · ${STATUS_RO[a.status]||''}</div></div>
+      <span class="qbadge" style="background:color-mix(in srgb,${col} 15%,transparent);color:${col}">${esc(a.quadrant)}</span></div>
+    <p class="idea">${esc(a.idea)}</p>
+    <div class="scores">
+      <div class="scline"><span class="lb">Afacere</span><span class="track"><span class="fill biz" style="width:${a.business}%"></span></span><span class="v">${a.business}</span><span class="cl">${a.bclass}</span></div>
+      <div class="scline"><span class="lb">Social</span><span class="track"><span class="fill soc" style="width:${a.social}%"></span></span><span class="v">${a.social}</span><span class="cl">${a.szone}</span></div>
+    </div>
+    ${pills.length?`<div class="pills">${pills.join('')}</div>`:''}
+    <div class="verdict-print"><b>Mesaj final:</b> ${esc(a.verdict)}</div>
+  </div>`;
+}
+function render(){
+  renderFilters();renderLots();renderDash();
+  let list=sortApps(currentSet());
+  const grid=document.getElementById('grid');
+  grid.innerHTML=list.length?list.map(cardHTML).join(''):`<div class="empty">Niciun aplicant nu corespunde filtrelor. <a href="#" id="reset" style="color:var(--biz)">Resetează</a></div>`;
+  grid.querySelectorAll('.card').forEach(c=>c.onclick=()=>openModal(c.dataset.id));
+  const rs=document.getElementById('reset');if(rs)rs.onclick=e=>{e.preventDefault();state={filter:'all',lot:0,quad:null,sort:state.sort,q:''};document.getElementById('q').value='';render();};
+  const nb=document.getElementById('notebar');
+  if(state.filter==='reconstructed'){
+    const dropped=DATA.applicants.filter(a=>a.recon_change==='out').map(a=>a.name);
+    const news=DATA.applicants.filter(a=>a.recon_change==='new').map(a=>a.name);
+    nb.classList.add('show');
+    nb.innerHTML=`<b>Regula reconstrucției:</b> top pe axa de afacere, cu respectarea cotelor pe loturi (7·4·3). <b>Intră:</b> ${news.join(', ')}. <b>Ies:</b> ${dropped.join(', ')}. Observație critică: chiar reconstruită, semifinala rămâne imperfectă — Lotul 2 nu are un al 4-lea candidat solid (IQ Games intră fără alternativă), iar misiuni puternice ca Mama Cafe și Brio ies, fiindcă axa de afacere nu le susține. Aici se vede tensiunea afacere ↔ misiune.`;
+  }else nb.classList.remove('show');
+  const cleanAll=state.filter==='all'&&state.lot===0&&!state.quad&&!state.q;
+  document.getElementById('exclusi').classList.toggle('hidden',!cleanAll);
+  highlightMatrix(cleanAll?null:list.map(a=>a.id));
+}
+document.getElementById('q').addEventListener('input',e=>{state.q=e.target.value.toLowerCase();render();});
+document.getElementById('sort').addEventListener('change',e=>{state.sort=e.target.value;render();});
+
+/* ---------- EXCLUŞI ---------- */
+document.getElementById('xbody').innerHTML=[...DATA.excluded].sort((a,b)=>b.s-a.s).map(x=>
+  `<tr><td class="name">${esc(x.n)}</td><td class="xlot">Lot ${x.lot}</td><td class="sc" style="color:${x.s>=45?'var(--amber)':'var(--txt-mut)'}">${x.s}</td><td>${esc(x.r)}</td></tr>`).join('');
+
+/* ---------- MODAL ---------- */
+function itemHTML(it,pos){return `<div class="item"><span class="mk ${pos?'pos':'neg'}">${pos?IC.check:IC.minus}</span><div class="tx">${esc(it.text)}<br>${srcLink(it.src,it.url)}</div></div>`;}
+function openModal(id){
+  const a=DATA.applicants.find(x=>x.id===id);if(!a)return;
+  const col=quadColor(a.quadrant);
+  const tags=(a.tags||[]).map(t=>`<span class="pill p-${t}">${esc(TAG_RO[t]||t)}</span>`).join(' ');
+  const claims=(a.claims||[]).map(c=>`<div class="claim"><div class="cd"><b>Declarat:</b> ${esc(c.claim)}</div><div class="cr"><b>Realitate:</b><span>${esc(c.reality)}</span></div><div style="margin-top:7px">${srcLink(c.src,c.url)}</div></div>`).join('');
+  const req=(a.request||[]).map(r=>`<li><span class="ic">${IC.send}</span>${esc(r)}</li>`).join('');
+  const read=(a.read||[]).map(r=>`<div class="rl"><code>${IC.book}</code><span>${esc(r)}</span></div>`).join('');
+  const modal=document.getElementById('modal');modal.style.setProperty('--qc',col);
+  modal.innerHTML=`
+    <div class="mhead"><button class="mclose" onclick="closeModal()">${IC.x}</button>
+      <h3 class="mt">${esc(a.name)}</h3>
+      <div class="mmeta">Lot ${a.lot} · ${esc(a.city)} · <span style="color:${col};font-weight:600">Cadran ${esc(a.quadrant)}</span> · ${STATUS_RO[a.status]||''} ${tags}</div>
+      <div class="mscores">
+        <div class="mscore biz"><div class="lb">Scor afacere <span style="font-size:13px">${a.bclass}</span></div><div class="val">${a.business}<span style="font-size:14px;color:var(--txt-mut)">/100</span></div><div class="track"><span class="fill biz" style="width:${a.business}%"></span></div></div>
+        <div class="mscore soc"><div class="lb">Scor social <span style="font-size:13px">${a.szone}</span></div><div class="val">${a.social}<span style="font-size:14px;color:var(--txt-mut)">/100</span></div><div class="track"><span class="fill soc" style="width:${a.social}%"></span></div></div>
+      </div></div>
+    <div class="mbody">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--txt-mut);margin-bottom:8px">Idee</div>
+      <p style="margin:0 0 16px;color:var(--txt-dim);font-size:14px">${esc(a.idea)}</p>
+      <div class="verdict"><b style="font-family:var(--fh)">Mesaj final. </b>${esc(a.verdict)}</div>
+      <div class="block"><h4><span class="ic">${IC.check}</span> Puncte forte</h4>${(a.strengths||[]).map(s=>itemHTML(s,true)).join('')}</div>
+      <div class="block neg"><h4><span class="ic">${IC.minus}</span> Puncte slabe</h4>${(a.weaknesses||[]).map(s=>itemHTML(s,false)).join('')}</div>
+      ${claims?`<div class="block"><h4><span class="ic" style="color:var(--amber)">${IC.scale}</span> Declarat vs. realitate</h4>${claims}</div>`:''}
+      ${req?`<div class="block"><h4><span class="ic" style="color:var(--teal)">${IC.send}</span> De solicitat de la aplicant</h4><ul class="reqlist">${req}</ul></div>`:''}
+      ${read?`<div class="block"><h4><span class="ic">${IC.book}</span> De citit (verificare independentă)</h4><div class="readbox">${read}</div></div>`:''}
+      <a class="folder-link" href="${ONEDRIVE}" target="_blank" rel="noopener">${IC.file} Deschide folderul concursului (OneDrive) ${IC.ext}</a>
+    </div>`;
+  const bg=document.getElementById('modalbg');bg.classList.add('open');bg.scrollTop=0;document.body.style.overflow='hidden';
+  try{if(location.hash!=='#'+id)history.replaceState(null,'','#'+id);}catch(e){}
+}
+function closeModal(){document.getElementById('modalbg').classList.remove('open');document.body.style.overflow='';try{if(location.hash)history.replaceState(null,'',location.pathname+location.search);}catch(e){}}
+document.getElementById('modalbg').addEventListener('click',e=>{if(e.target.id==='modalbg')closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+/* ---------- PRINT & INIT ---------- */
+document.getElementById('printbtn').onclick=()=>window.print();
+buildMatrix();
+render();
+if(location.hash){const id=location.hash.slice(1);if(DATA.applicants.some(a=>a.id===id))openModal(id);}
+window.addEventListener('resize',()=>{});
+</script>
+</body>
+</html>
