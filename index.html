@@ -377,7 +377,7 @@ footer b{color:var(--txt-dim);font-family:var(--fh);font-weight:500}
 
 <section id="matrice"><div class="wrap">
   <div class="sec-head"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><circle cx="8" cy="15" r="1.6"/><circle cx="13" cy="9" r="1.6"/><circle cx="18" cy="6" r="1.6"/></svg></span><h2>Matricea afacere × social</h2></div>
-  <p class="sec-sub">Orizontal — viabilitatea de afacere; vertical — profunzimea misiunii sociale. Colțul din dreapta-sus (★) e ținta fondului. Apasă un punct pentru dosarul complet.</p>
+  <p class="sec-sub">Orizontal — viabilitatea de afacere; vertical — profunzimea misiunii sociale. Colțul ★ (dreapta-sus) e ținta fondului; inelul auriu ◎ marchează favoriții. Atenție: matricea arată doar 2 axe — statutul de favorit adaugă adiționalitatea (grantul să conteze, nu deadweight) și integritatea. De aceea CASMED stă în colțul ★ fără să fie favorit (deadweight), iar un favorit poate fi în afara colțului. Apasă un punct pentru dosarul complet.</p>
   <div class="matrix-shell">
     <svg id="matrix" viewBox="0 0 760 570" preserveAspectRatio="xMidYMid meet"></svg>
     <div class="matrix-legend" id="mlegend"></div>
@@ -555,25 +555,28 @@ function buildMatrix(){
   const tip=document.getElementById('mtip');
   DATA.applicants.forEach(a=>{
     const col=quadColor(a.quadrant),isSemi=a.status==='semifinalist';
+    if(a.fund_fit){add('circle',{cx:px(a.business),cy:py(a.social),r:isSemi?15:14,fill:'none',stroke:a.fund_fit==='favorite'?'#ffcf5a':'rgba(255,207,90,.55)','stroke-width':a.fund_fit==='favorite'?2.6:1.6,'stroke-dasharray':a.fund_fit==='favorite'?'':'2 3','data-fav':a.id});}
     if(!isSemi){add('circle',{cx:px(a.business),cy:py(a.social),r:10,fill:'none',stroke:col,'stroke-width':2.6,'stroke-dasharray':'3 3',opacity:.96,'data-ring':a.id});add('circle',{cx:px(a.business),cy:py(a.social),r:2.6,fill:col,opacity:.96,'data-ring':a.id});}
     const c=add('circle',{cx:px(a.business),cy:py(a.social),r:isSemi?10:9,fill:isSemi?col:'transparent',stroke:isSemi?'rgba(255,255,255,.92)':'transparent','stroke-width':isSemi?1.4:0,opacity:1,class:'pt','data-id':a.id,style:'color:'+col});
     c.addEventListener('click',()=>openModal(a.id));
     const move=ev=>{const e=ev.touches?ev.touches[0]:ev;tip.style.left=Math.min(e.clientX+14,innerWidth-260)+'px';tip.style.top=(e.clientY+14)+'px';};
     c.addEventListener('mousemove',move);
     c.addEventListener('mouseenter',ev=>{c.setAttribute('r',isSemi?13:11);
-      tip.innerHTML=`<b>${esc(a.name)}</b><div class="sc"><span>Afacere <i>${a.business}</i></span><span>Social <i>${a.social}</i></span><span>Cadran <i>${esc(quadNum(a.quadrant))}</i></span></div>`;
+      tip.innerHTML=`<b>${esc(a.name)}</b><div class="sc"><span>Afacere <i>${a.business}</i></span><span>Social <i>${a.social}</i></span><span>Cadran <i>${esc(quadNum(a.quadrant))}</i></span></div>${a.fund_fit?`<div style="margin-top:5px;color:#ffcf5a;font-size:11.5px">${a.fund_fit==='favorite'?'★ Favorit — potențial real':'◎ De luat în calcul'}</div>`:''}`;
       tip.style.opacity=1;move(ev);});
     c.addEventListener('mouseleave',()=>{c.setAttribute('r',isSemi?10:9);tip.style.opacity=0;});
   });
   document.getElementById('mlegend').innerHTML=
     ['I','II','III','IV'].map(k=>`<span class="lg"><span class="sw" style="background:${cssv({I:'--q1',II:'--q2',III:'--q3',IV:'--q4'}[k])}"></span>Cadran ${k}</span>`).join('')
     +`<span class="lg"><svg class="shp" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="${cssv('--txt-mut')}"/></svg>Semifinalist</span>`
-    +`<span class="lg"><svg class="shp" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="none" stroke="${cssv('--txt-mut')}" stroke-width="2" stroke-dasharray="3 2.5"/></svg>Merita semifinala</span>`;
+    +`<span class="lg"><svg class="shp" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="none" stroke="${cssv('--txt-mut')}" stroke-width="2" stroke-dasharray="3 2.5"/></svg>Merita semifinala</span>`
+    +`<span class="lg"><svg class="shp" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5" fill="none" stroke="#ffcf5a" stroke-width="2.4"/></svg>Favorit (potențial real)</span>`;
 }
 function highlightMatrix(ids){
   const set=ids?new Set(ids):null;
   document.querySelectorAll('#matrix .pt').forEach(c=>c.style.opacity=(!set||set.has(c.getAttribute('data-id')))?0.96:0.1);
   document.querySelectorAll('#matrix [data-ring]').forEach(c=>c.style.opacity=(!set||set.has(c.getAttribute('data-ring')))?0.9:0.07);
+  document.querySelectorAll('#matrix [data-fav]').forEach(c=>c.style.opacity=(!set||set.has(c.getAttribute('data-fav')))?0.95:0.06);
 }
 
 /* ---------- STATE / FILTERS ---------- */
