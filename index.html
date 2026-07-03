@@ -401,7 +401,7 @@ footer b{color:var(--txt-dim);font-family:var(--fh);font-weight:500}
 
 <section id="aplicanti"><div class="wrap">
   <div class="sec-head"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg></span><h2>Dosarele aplicanților</h2></div>
-  <p class="sec-sub">20 de dosare analizate în detaliu: 14 semifinaliști + 6 care meritau semifinala. Filtrează pe cadran, lot sau tip; sortează, caută — apasă un card pentru dosarul complet.</p>
+  <p class="sec-sub" id="apl-sub">21 de dosare analizate în detaliu: 14 semifinaliști + 7 care meritau semifinala. Filtrează pe cadran, lot sau tip; sortează, caută — apasă un card pentru dosarul complet.</p>
 
   <div class="dash" id="dash"></div>
 
@@ -431,7 +431,7 @@ footer b{color:var(--txt-dim);font-family:var(--fh);font-weight:500}
 </div></section>
 
 <section id="exclusi"><div class="wrap">
-  <div class="sec-head"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg></span><h2>Corect eliminați (19)</h2></div>
+  <div class="sec-head"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg></span><h2 id="excl-h2">Corect eliminați (18)</h2></div>
   <p class="sec-sub">Aplicanți care nu au trecut de filtrul de afacere — pe drept. Scorul e pe axa de afacere; motivul, pe scurt.</p>
   <table class="xtable"><thead><tr><th>Aplicant</th><th>Lot</th><th>Afacere</th><th>De ce a picat</th></tr></thead><tbody id="xbody"></tbody></table>
 </div></section>
@@ -492,6 +492,8 @@ const nShould=DATA.applicants.filter(a=>a.status==='should_have_passed').length;
 [[nSemi,'semifinaliști analizați'],[nShould,'meritau semifinala'],[DATA.excluded.length,'corect eliminați'],['2','axe · 4 cadrane']]
  .forEach(()=>{});
 document.getElementById('stats').innerHTML=[[nSemi,'semifinaliști analizați'],[nShould,'meritau semifinala'],[DATA.excluded.length,'corect eliminați'],[DATA.applicants.length+DATA.excluded.length,'aplicanți unici evaluați']].map(s=>`<div class="stat"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('');
+document.getElementById('apl-sub').textContent=`${DATA.applicants.length} de dosare analizate în detaliu: ${nSemi} semifinaliști + ${nShould} care meritau semifinala. Filtrează pe cadran, lot sau tip; sortează, caută — apasă un card pentru dosarul complet.`;
+document.getElementById('excl-h2').textContent=`Corect eliminați (${DATA.excluded.length})`;
 document.getElementById('disc').innerHTML=IC.warn+'<div>'+esc(DATA.meta.methodology.disclaimer)+'</div>';
 document.getElementById('insights').innerHTML=INS.map(i=>`<div class="insight"><div class="ic" style="color:${i.c}">${i.ic}</div><h4>${i.h}</h4><p>${i.p}</p></div>`).join('');
 
